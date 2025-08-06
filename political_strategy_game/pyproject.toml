@@ -6,6 +6,7 @@ authors = [
     {name = "Political Strategy Game Team"}
 ]
 readme = "README.md"
+license = {text = "MIT"}
 requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2.0.0",
