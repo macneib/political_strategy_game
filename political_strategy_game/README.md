@@ -308,6 +308,13 @@ uv run python demo.py  # See the political simulation in action
 - **🤝 Collaborate Openly**: Share your wild ideas, build on others' work  
 - **🧪 Test Everything**: Political systems are complex - verify your assumptions
 - **🎮 Player Experience Focus**: Cool tech is great, but does it make the game more fun?
+- **🆓 Your Ideas Stay Yours**: MIT license means your contributions remain your intellectual property
+
+### 🛡️ **Contributor Protection**
+- **No Idea Theft**: We're not here to steal your brilliant concepts
+- **No Corporate Takeover**: This stays community-owned and MIT licensed forever
+- **No Hidden Agenda**: We're building this because it's cool, not to make money off your work
+- **Credit Where Due**: Contributors get recognition for their work
 
 ### 📋 **Getting Started**
 1. **Check out** `/tasks.md` for detailed work items
