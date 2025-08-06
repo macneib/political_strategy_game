@@ -1,0 +1,68 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Political Strategy Game Demo",
+			"type": "shell",
+			"command": "uv",
+			"args": [
+				"run",
+				"python",
+				"demo.py"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/political_strategy_game"
+			}
+		},
+		{
+			"label": "Setup Political Strategy Game",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"setup_uv.sh"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/political_strategy_game"
+			}
+		},
+		{
+			"label": "Run Political Strategy Game Tests",
+			"type": "shell",
+			"command": "uv",
+			"args": [
+				"run",
+				"python",
+				"tests/test_core_structures.py"
+			],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/political_strategy_game"
+			}
+		},
+		{
+			"label": "Install LLM Dependencies",
+			"type": "shell",
+			"command": "uv",
+			"args": [
+				"pip",
+				"install",
+				"-e",
+				".[llm]"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/political_strategy_game"
+			}
+		}
+	]
+}

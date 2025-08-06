@@ -1,0 +1,8 @@
+# uv Configuration  
+# This file contains uv-specific configuration for the Political Strategy Game
+
+[pip]
+index-url = "https://pypi.org/simple"
+extra-index-url = []
+
+

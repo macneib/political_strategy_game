@@ -1,0 +1,22 @@
+# Core dependencies
+pydantic>=2.0.0
+pytest>=7.0.0
+pytest-asyncio>=0.20.0
+python-dotenv>=1.0.0
+
+# LLM Integration
+openai>=1.0.0
+anthropic>=0.7.0
+
+# Data handling
+aiofiles>=23.0.0
+ujson>=5.0.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Optional game engine integration
+requests>=2.31.0
+websockets>=11.0.0
