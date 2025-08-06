@@ -318,9 +318,18 @@ uv run python demo.py  # See the political simulation in action
 
 **🎪 Ready to help overthrow some digital governments? Let's build this together!**
 
-## 📄 License
+## 📄 **License - Completely Free & Open**
 
-This project is a game design implementation following the specifications in `.spec/political-strategy-game/`. See those files for detailed requirements and design decisions.
+**MIT Licensed** - This project is completely free and open source! 
+
+- ✅ **Use it however you want** - Commercial, personal, educational, anything
+- ✅ **Your contributions remain yours** - We're not claiming ownership of your ideas
+- ✅ **Fork and build your own version** - Take this engine and make something amazing
+- ✅ **No restrictions** - The most permissive license possible
+
+We chose MIT specifically because we want this to be a **community-driven project** where everyone feels safe contributing. Your ideas, your code, your creativity - all welcome and protected.
+
+**🎯 Our goal**: Build something revolutionary together, not claim ownership of your brilliance.
 
 ## 🎨 Design Philosophy
 
