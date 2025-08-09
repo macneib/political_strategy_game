@@ -14,6 +14,10 @@ from .memory import MemoryBank, MemoryManager, Memory, MemoryType
 from .events import EventManager, PoliticalEvent, EventType, EventSeverity
 from .resources import ResourceManager, ResourceEvent, ResourceType
 from .diplomacy import DiplomacyManager, DiplomaticStatus, Treaty, TradeRoute
+from .advanced_politics import (
+    AdvancedPoliticalManager, ConspiracyType, FactionType, PoliticalIdeology,
+    PropagandaType, SuccessionCrisisType, ConspiracyNetwork, PoliticalFaction
+)
 
 
 class PoliticalStability(str, Enum):
@@ -85,6 +89,9 @@ class Civilization(BaseModel):
     international_treaties: List[str] = Field(default_factory=list)  # Treaty IDs
     known_civilizations: Set[str] = Field(default_factory=set)
     
+    # Advanced political systems
+    advanced_politics: Optional[AdvancedPoliticalManager] = Field(default=None, exclude=True)
+    
     # Technologies and capabilities
     unlocked_technologies: Set[str] = Field(default_factory=set)
     espionage_capabilities: Dict[str, float] = Field(default_factory=dict)
@@ -110,6 +117,12 @@ class Civilization(BaseModel):
         
         # Initialize diplomacy manager (shared instance will be set externally)
         self.diplomacy_manager = None
+        
+        # Initialize advanced politics manager
+        self.advanced_politics = AdvancedPoliticalManager(
+            civilization_id=self.id, 
+            current_turn=self.current_turn
+        )
     
     def set_memory_manager(self, memory_manager: MemoryManager) -> None:
         """Set the memory manager for this civilization."""
@@ -397,6 +410,18 @@ class Civilization(BaseModel):
                     # Create memories for advisors about resource events
                     self._create_resource_event_memories(event)
         
+        # Process advanced political mechanics
+        if self.advanced_politics:
+            # Update advanced politics turn counter
+            self.advanced_politics.current_turn = self.current_turn + 1
+            
+            # Process advanced political events
+            advanced_results = self.advanced_politics.process_turn()
+            turn_results["advanced_politics"] = advanced_results
+            
+            # Create memories for political events
+            self._create_advanced_political_memories(advanced_results)
+        
         # Advance turn counter
         self.current_turn += 1
         
@@ -492,6 +517,85 @@ class Civilization(BaseModel):
                     tags={event.resource_type.value, "resource_event", event.event_name.lower().replace(" ", "_")}
                 )
                 
+                self.memory_manager.store_memory(advisor.id, memory)
+    
+    def _create_advanced_political_memories(self, advanced_results: Dict[str, Any]) -> None:
+        """Create memories for advisors about advanced political events."""
+        if not self.memory_manager:
+            return
+        
+        # Process conspiracy detections
+        for detected_conspiracy in advanced_results.get("conspiracies_detected", []):
+            for advisor in self.advisors.values():
+                # Security advisors are more likely to know about conspiracy detection
+                if advisor.role == AdvisorRole.SECURITY:
+                    memory = Memory(
+                        advisor_id=advisor.id,
+                        event_type=MemoryType.CONSPIRACY,
+                        content=f"Detected conspiracy led by {detected_conspiracy['leader']} involving {len(detected_conspiracy['members'])} members",
+                        emotional_impact=0.8,
+                        created_turn=self.current_turn,
+                        last_accessed_turn=self.current_turn,
+                        tags={"conspiracy", "detection", detected_conspiracy["type"], "security"}
+                    )
+                    self.memory_manager.store_memory(advisor.id, memory)
+                elif advisor.id not in detected_conspiracy.get("members", []):
+                    # Other advisors might hear rumors
+                    memory = Memory(
+                        advisor_id=advisor.id,
+                        event_type=MemoryType.INTELLIGENCE,
+                        content=f"Rumors of conspiracy involving {detected_conspiracy['type']} have surfaced",
+                        emotional_impact=0.6,
+                        created_turn=self.current_turn,
+                        last_accessed_turn=self.current_turn,
+                        tags={"conspiracy", "rumors", detected_conspiracy["type"]}
+                    )
+                    self.memory_manager.store_memory(advisor.id, memory)
+        
+        # Process conspiracy activations
+        for activated_conspiracy in advanced_results.get("conspiracies_activated", []):
+            for advisor in self.advisors.values():
+                if advisor.role in [AdvisorRole.SECURITY, AdvisorRole.DIPLOMATIC]:
+                    memory = Memory(
+                        advisor_id=advisor.id,
+                        event_type=MemoryType.DECISION,
+                        content=f"Political conspiracy of type {activated_conspiracy['type']} has become active",
+                        emotional_impact=0.7,
+                        created_turn=self.current_turn,
+                        last_accessed_turn=self.current_turn,
+                        tags={"conspiracy", "activation", activated_conspiracy["type"], "instability"}
+                    )
+                    self.memory_manager.store_memory(advisor.id, memory)
+        
+        # Process propaganda effects
+        for propaganda_effect in advanced_results.get("propaganda_effects", []):
+            # Advisors involved in politics would notice propaganda campaigns
+            for advisor in self.advisors.values():
+                if advisor.role in [AdvisorRole.DIPLOMATIC, AdvisorRole.SECURITY]:
+                    memory = Memory(
+                        advisor_id=advisor.id,
+                        event_type=MemoryType.DECISION,
+                        content=f"Propaganda campaign affecting {propaganda_effect['target']} has shifted public opinion",
+                        emotional_impact=0.5,
+                        created_turn=self.current_turn,
+                        last_accessed_turn=self.current_turn,
+                        tags={"propaganda", "information_warfare", "public_opinion"}
+                    )
+                    self.memory_manager.store_memory(advisor.id, memory)
+        
+        # Process passed reforms
+        for passed_reform in advanced_results.get("reforms_passed", []):
+            for advisor in self.advisors.values():
+                # All advisors would know about major political reforms
+                memory = Memory(
+                    advisor_id=advisor.id,
+                    event_type=MemoryType.DECISION,
+                    content=f"Political reform '{passed_reform['name']}' has been enacted",
+                    emotional_impact=0.6,
+                    created_turn=self.current_turn,
+                    last_accessed_turn=self.current_turn,
+                    tags={"reform", "politics", "legislation", "change"}
+                )
                 self.memory_manager.store_memory(advisor.id, memory)
     
     def get_resource_summary(self) -> Dict[str, Any]:
@@ -874,22 +978,308 @@ class Civilization(BaseModel):
     
     # ========== END DIPLOMATIC METHODS ==========
     
+    # ========== ADVANCED POLITICAL METHODS ==========
+    
+    def create_political_faction(self, name: str, faction_type: FactionType, 
+                                ideology: PoliticalIdeology, leader_advisor_id: Optional[str] = None) -> str:
+        """Create a new political faction within the civilization."""
+        if not self.advanced_politics:
+            return ""
+        
+        faction_id = self.advanced_politics.create_faction(name, faction_type, ideology, leader_advisor_id)
+        
+        # Create memory for advisors about faction formation
+        if self.memory_manager and leader_advisor_id:
+            memory_content = f"Founded political faction '{name}' with {ideology.value} ideology"
+            memory = Memory(
+                advisor_id=leader_advisor_id,
+                event_type=MemoryType.DECISION,
+                content=memory_content,
+                emotional_impact=0.8,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"faction", "politics", faction_type.value, ideology.value}
+            )
+            self.memory_manager.store_memory(leader_advisor_id, memory)
+        
+        return faction_id
+    
+    def join_political_faction(self, advisor_id: str, faction_id: str) -> bool:
+        """Have an advisor join a political faction."""
+        if not self.advanced_politics:
+            return False
+        
+        success = self.advanced_politics.join_faction(advisor_id, faction_id)
+        
+        if success and self.memory_manager:
+            # Find faction name for memory
+            faction = self.advanced_politics._find_faction(faction_id)
+            faction_name = faction.name if faction else "Unknown Faction"
+            
+            memory_content = f"Joined political faction '{faction_name}'"
+            memory = Memory(
+                advisor_id=advisor_id,
+                event_type=MemoryType.DECISION,
+                content=memory_content,
+                emotional_impact=0.6,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"faction", "politics", "membership"}
+            )
+            self.memory_manager.store_memory(advisor_id, memory)
+        
+        return success
+    
+    def form_conspiracy(self, leader_advisor_id: str, conspiracy_type: ConspiracyType,
+                       objective: str, target: Optional[str] = None) -> str:
+        """Form a conspiracy within the civilization."""
+        if not self.advanced_politics:
+            return ""
+        
+        conspiracy_id = self.advanced_politics.form_conspiracy(
+            leader_advisor_id, conspiracy_type, objective, target
+        )
+        
+        # Create memory for conspiracy leader (secret memory)
+        if self.memory_manager:
+            memory_content = f"Formed secret conspiracy: {objective}"
+            memory = Memory(
+                advisor_id=leader_advisor_id,
+                event_type=MemoryType.CONSPIRACY,
+                content=memory_content,
+                emotional_impact=0.9,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"conspiracy", "secret", conspiracy_type.value, "leader"}
+            )
+            self.memory_manager.store_memory(leader_advisor_id, memory)
+        
+        return conspiracy_id
+    
+    def recruit_to_conspiracy(self, conspiracy_id: str, recruiter_id: str, target_id: str) -> bool:
+        """Attempt to recruit an advisor to a conspiracy."""
+        if not self.advanced_politics:
+            return False
+        
+        # Get advisor relationships for recruitment calculation
+        advisor_relationships = {}
+        for advisor_id, advisor in self.advisors.items():
+            advisor_relationships[advisor_id] = {}
+            for other_id, relationship in advisor.relationships.items():
+                advisor_relationships[advisor_id][other_id] = {
+                    'trust': relationship.trust,
+                    'conspiracy_level': relationship.conspiracy_level
+                }
+        
+        success = self.advanced_politics.recruit_to_conspiracy(
+            conspiracy_id, recruiter_id, target_id, advisor_relationships
+        )
+        
+        if success and self.memory_manager:
+            # Create memory for both recruiter and target
+            conspiracy = self.advanced_politics._find_conspiracy(conspiracy_id)
+            objective = conspiracy.objective if conspiracy else "Unknown conspiracy"
+            
+            # Recruiter memory
+            recruiter_memory = Memory(
+                advisor_id=recruiter_id,
+                event_type=MemoryType.CONSPIRACY,
+                content=f"Successfully recruited {target_id} to conspiracy: {objective}",
+                emotional_impact=0.7,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"conspiracy", "recruitment", "success"}
+            )
+            self.memory_manager.store_memory(recruiter_id, recruiter_memory)
+            
+            # Target memory
+            target_memory = Memory(
+                advisor_id=target_id,
+                event_type=MemoryType.CONSPIRACY,
+                content=f"Joined conspiracy led by {recruiter_id}: {objective}",
+                emotional_impact=0.8,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"conspiracy", "secret", "member"}
+            )
+            self.memory_manager.store_memory(target_id, target_memory)
+        
+        return success
+    
+    def launch_propaganda_campaign(self, sponsor_advisor_id: str, campaign_type: PropagandaType,
+                                  message: str, target: Optional[str] = None, funding: float = 100.0) -> str:
+        """Launch a propaganda campaign."""
+        if not self.advanced_politics:
+            return ""
+        
+        campaign_id = self.advanced_politics.launch_propaganda_campaign(
+            sponsor_advisor_id, campaign_type, message, target, funding
+        )
+        
+        # Create memory for sponsor
+        if self.memory_manager:
+            memory_content = f"Launched {campaign_type.value} propaganda campaign: {message}"
+            memory = Memory(
+                advisor_id=sponsor_advisor_id,
+                event_type=MemoryType.DECISION,
+                content=memory_content,
+                emotional_impact=0.6,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"propaganda", "information_warfare", campaign_type.value}
+            )
+            self.memory_manager.store_memory(sponsor_advisor_id, memory)
+        
+        return campaign_id
+    
+    def propose_political_reform(self, proposer_id: str, name: str, description: str,
+                                reform_scope: str, required_votes: int = 3) -> str:
+        """Propose a political reform."""
+        if not self.advanced_politics:
+            return ""
+        
+        reform_id = self.advanced_politics.propose_reform(
+            proposer_id, name, description, reform_scope, required_votes
+        )
+        
+        # Create memory for proposer
+        if self.memory_manager:
+            memory_content = f"Proposed political reform '{name}': {description}"
+            memory = Memory(
+                advisor_id=proposer_id,
+                event_type=MemoryType.DECISION,
+                content=memory_content,
+                emotional_impact=0.7,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"reform", "politics", "proposal", reform_scope}
+            )
+            self.memory_manager.store_memory(proposer_id, memory)
+        
+        return reform_id
+    
+    def vote_on_reform(self, reform_id: str, voter_id: str, support: bool) -> bool:
+        """Cast a vote on a proposed reform."""
+        if not self.advanced_politics:
+            return False
+        
+        success = self.advanced_politics.vote_on_reform(reform_id, voter_id, support)
+        
+        if success and self.memory_manager:
+            # Find reform name for memory
+            reform = self.advanced_politics._find_reform(reform_id)
+            reform_name = reform.name if reform else "Unknown Reform"
+            
+            memory_content = f"Voted {'for' if support else 'against'} reform '{reform_name}'"
+            memory = Memory(
+                advisor_id=voter_id,
+                event_type=MemoryType.DECISION,
+                content=memory_content,
+                emotional_impact=0.5,
+                created_turn=self.current_turn,
+                last_accessed_turn=self.current_turn,
+                tags={"reform", "vote", "support" if support else "opposition"}
+            )
+            self.memory_manager.store_memory(voter_id, memory)
+        
+        return success
+    
+    def trigger_succession_crisis(self, crisis_type: SuccessionCrisisType) -> bool:
+        """Trigger a succession crisis."""
+        if not self.advanced_politics:
+            return False
+        
+        success = self.advanced_politics.trigger_succession_crisis(crisis_type)
+        
+        if success and self.memory_manager:
+            # Create memories for all advisors about the crisis
+            memory_content = f"Succession crisis triggered: {crisis_type.value}"
+            for advisor in self.advisors.values():
+                memory = Memory(
+                    advisor_id=advisor.id,
+                    event_type=MemoryType.CRISIS,
+                    content=memory_content,
+                    emotional_impact=0.9,
+                    created_turn=self.current_turn,
+                    last_accessed_turn=self.current_turn,
+                    tags={"succession", "crisis", crisis_type.value, "instability"}
+                )
+                self.memory_manager.store_memory(advisor.id, memory)
+        
+        return success
+    
+    def get_political_factions(self) -> List[Dict[str, Any]]:
+        """Get information about all political factions."""
+        if not self.advanced_politics:
+            return []
+        
+        factions_info = []
+        for faction in self.advanced_politics.political_factions:
+            factions_info.append({
+                "id": faction.id,
+                "name": faction.name,
+                "type": faction.faction_type,
+                "ideology": faction.ideology,
+                "leader_id": faction.leader_id,
+                "member_count": len(faction.members),
+                "influence": faction.influence,
+                "popularity": faction.popularity,
+                "political_power": faction.calculate_political_power()
+            })
+        
+        return factions_info
+    
+    def get_active_conspiracies(self) -> List[Dict[str, Any]]:
+        """Get information about active conspiracies (for debugging/admin view)."""
+        if not self.advanced_politics:
+            return []
+        
+        conspiracies_info = []
+        for conspiracy in self.advanced_politics.active_conspiracies:
+            conspiracies_info.append({
+                "id": conspiracy.id,
+                "type": conspiracy.conspiracy_type,
+                "status": conspiracy.status,
+                "leader_id": conspiracy.leader_id,
+                "member_count": len(conspiracy.members),
+                "objective": conspiracy.objective,
+                "target": conspiracy.target,
+                "network_strength": conspiracy.network_strength,
+                "secrecy_level": conspiracy.secrecy_level,
+                "discovery_risk": conspiracy.discovery_risk,
+                "success_probability": conspiracy.calculate_success_probability()
+            })
+        
+        return conspiracies_info
+    
+    def get_advanced_political_summary(self) -> Dict[str, Any]:
+        """Get comprehensive advanced political situation summary."""
+        if not self.advanced_politics:
+            return {"error": "Advanced politics not initialized"}
+        
+        return self.advanced_politics.get_political_summary()
+    
+    # ========== END ADVANCED POLITICAL METHODS ==========
+    
     def get_comprehensive_summary(self) -> Dict[str, Any]:
-        """Get a comprehensive summary including political, resource, and diplomatic information."""
+        """Get a comprehensive summary including political, resource, diplomatic, and advanced political information."""
         political_summary = self.get_political_summary()
         resource_summary = self.get_resource_summary()
         diplomatic_summary = self.get_diplomatic_summary()
+        advanced_political_summary = self.get_advanced_political_summary()
         
         return {
             "political": political_summary,
             "resources": resource_summary,
             "diplomacy": diplomatic_summary,
+            "advanced_politics": advanced_political_summary,
             "integration": {
                 "total_advisors": len(self.advisors),
                 "memory_manager_active": self.memory_manager is not None,
                 "event_manager_active": self.event_manager is not None,
                 "resource_manager_active": self.resource_manager is not None,
                 "diplomacy_manager_active": self.diplomacy_manager is not None,
+                "advanced_politics_active": self.advanced_politics is not None,
                 "active_resource_events": len(self.resource_manager.active_events) if self.resource_manager else 0,
                 "known_civilizations": len(self.known_civilizations),
                 "active_treaties": len(self.international_treaties)

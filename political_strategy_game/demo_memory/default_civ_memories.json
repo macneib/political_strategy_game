@@ -1,0 +1,1172 @@
+{
+  "civilization_id": "default_civ",
+  "advisor_memories": {
+    "97da0759-16f2-4460-a143-f8755d5a6cd0": {
+      "advisor_id": "97da0759-16f2-4460-a143-f8755d5a6cd0",
+      "memories": [
+        {
+          "id": "b4e0a4dd-3c1c-4eb8-ba49-cc46ddae50b3",
+          "advisor_id": "97da0759-16f2-4460-a143-f8755d5a6cd0",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "592f46c6-4af3-4954-8ac9-85b63b9e2bb0": {
+      "advisor_id": "592f46c6-4af3-4954-8ac9-85b63b9e2bb0",
+      "memories": [
+        {
+          "id": "3ffd9f67-c363-43c2-8a8d-7b8141b57afc",
+          "advisor_id": "592f46c6-4af3-4954-8ac9-85b63b9e2bb0",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "67c52463-6607-44ab-8246-8fddfeff2892": {
+      "advisor_id": "67c52463-6607-44ab-8246-8fddfeff2892",
+      "memories": [
+        {
+          "id": "5f5253a4-3c8b-4492-b345-0925fd237451",
+          "advisor_id": "67c52463-6607-44ab-8246-8fddfeff2892",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "ed56bb09-87f8-4b93-a470-565803dc3a35": {
+      "advisor_id": "ed56bb09-87f8-4b93-a470-565803dc3a35",
+      "memories": [
+        {
+          "id": "7ed5c81b-8047-4b3a-bc54-3ca230065bad",
+          "advisor_id": "ed56bb09-87f8-4b93-a470-565803dc3a35",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "747c0d26-4b7c-4b11-9d01-7a780e0de432": {
+      "advisor_id": "747c0d26-4b7c-4b11-9d01-7a780e0de432",
+      "memories": [
+        {
+          "id": "134dc5ab-f734-48ef-a4b4-960de92431f8",
+          "advisor_id": "747c0d26-4b7c-4b11-9d01-7a780e0de432",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "e66fea81-9ea0-475d-b0eb-d52e0ab3ce9f",
+          "advisor_id": "747c0d26-4b7c-4b11-9d01-7a780e0de432",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "e1d30a9e-12a9-44ba-a779-04844ad9f843": {
+      "advisor_id": "e1d30a9e-12a9-44ba-a779-04844ad9f843",
+      "memories": [
+        {
+          "id": "849d7d1b-0350-4153-be37-e7daf2a78ef1",
+          "advisor_id": "e1d30a9e-12a9-44ba-a779-04844ad9f843",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "431532b8-acd9-403f-b69c-5ff2038f98dd": {
+      "advisor_id": "431532b8-acd9-403f-b69c-5ff2038f98dd",
+      "memories": [
+        {
+          "id": "c513c0a5-800f-4cf7-923b-0e1cdf2cdd22",
+          "advisor_id": "431532b8-acd9-403f-b69c-5ff2038f98dd",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "be507f03-c969-4118-9ca4-b333746d91b7",
+          "advisor_id": "431532b8-acd9-403f-b69c-5ff2038f98dd",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "b9748a0a-286c-468d-a001-c3493e7e2382": {
+      "advisor_id": "b9748a0a-286c-468d-a001-c3493e7e2382",
+      "memories": [
+        {
+          "id": "e3efce59-b0e5-45ac-bfd8-8c8d9d227bac",
+          "advisor_id": "b9748a0a-286c-468d-a001-c3493e7e2382",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "1a9e151c-94f2-4475-bd18-5d3386c6eac0": {
+      "advisor_id": "1a9e151c-94f2-4475-bd18-5d3386c6eac0",
+      "memories": [
+        {
+          "id": "96fd2a97-947b-4e11-a09f-e8eb2fd14909",
+          "advisor_id": "1a9e151c-94f2-4475-bd18-5d3386c6eac0",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "e6d38295-a6c0-45b9-bc00-3db005a0830c",
+          "advisor_id": "1a9e151c-94f2-4475-bd18-5d3386c6eac0",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "18c34c00-f170-4065-9b30-b5a330d0e9bb",
+          "advisor_id": "1a9e151c-94f2-4475-bd18-5d3386c6eac0",
+          "event_type": "decision",
+          "content": "Launched policy_promotion propaganda campaign: The senate represents the wisdom of tradition and stability",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "policy_promotion",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "e6ecf0e2-3dfe-4d02-8a22-890b236bc35d",
+          "advisor_id": "1a9e151c-94f2-4475-bd18-5d3386c6eac0",
+          "event_type": "decision",
+          "content": "Proposed political reform 'Senate Expansion Act': Expand the senate to include more regional representatives",
+          "emotional_impact": 0.7,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "proposal",
+            "constitutional",
+            "politics",
+            "reform"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "4d3d938f-e3c8-4a2a-af42-c03b4732d821": {
+      "advisor_id": "4d3d938f-e3c8-4a2a-af42-c03b4732d821",
+      "memories": [
+        {
+          "id": "af16ec5d-35a9-4a85-920c-c612708d02dc",
+          "advisor_id": "4d3d938f-e3c8-4a2a-af42-c03b4732d821",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "32962c49-a886-4669-9015-39c4c91b34f3",
+          "advisor_id": "4d3d938f-e3c8-4a2a-af42-c03b4732d821",
+          "event_type": "decision",
+          "content": "Launched foreign_threat_emphasis propaganda campaign: Our military strength protects the empire from external threats",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "foreign_threat_emphasis",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "e8e96230-3be2-4cac-8044-8f0110e63419",
+          "advisor_id": "4d3d938f-e3c8-4a2a-af42-c03b4732d821",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "98c5f028-84fb-4f72-807a-330ca6ee78b0": {
+      "advisor_id": "98c5f028-84fb-4f72-807a-330ca6ee78b0",
+      "memories": [
+        {
+          "id": "aa2681db-6e3f-42c5-9955-4f0923038f40",
+          "advisor_id": "98c5f028-84fb-4f72-807a-330ca6ee78b0",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "8908466e-6d3c-43ea-9081-e8eb2bec5a9c": {
+      "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+      "memories": [
+        {
+          "id": "833aa75d-f500-4b7d-b37b-be2f1e74d470",
+          "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "40b9132a-31bb-4083-a69d-61a6da82f2a7",
+          "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "9c0c4f3d-d057-4d36-ad6a-8a9a7030c3a1",
+          "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+          "event_type": "decision",
+          "content": "Launched policy_promotion propaganda campaign: The senate represents the wisdom of tradition and stability",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "policy_promotion",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "f4053f97-6499-4236-a53c-30c69d1d3257",
+          "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+          "event_type": "decision",
+          "content": "Proposed political reform 'Senate Expansion Act': Expand the senate to include more regional representatives",
+          "emotional_impact": 0.7,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "proposal",
+            "constitutional",
+            "politics",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "7e58e8b4-9169-4dc3-9308-257abfef3ad4",
+          "advisor_id": "8908466e-6d3c-43ea-9081-e8eb2bec5a9c",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "ca888e89-47f0-46f4-882b-ab14d9d4cfb2": {
+      "advisor_id": "ca888e89-47f0-46f4-882b-ab14d9d4cfb2",
+      "memories": [
+        {
+          "id": "f36dec44-47c3-4834-a82d-c15ab18aecdd",
+          "advisor_id": "ca888e89-47f0-46f4-882b-ab14d9d4cfb2",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "682ad50f-f636-4f11-ab77-916a2ae61787",
+          "advisor_id": "ca888e89-47f0-46f4-882b-ab14d9d4cfb2",
+          "event_type": "decision",
+          "content": "Launched foreign_threat_emphasis propaganda campaign: Our military strength protects the empire from external threats",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "foreign_threat_emphasis",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "205f13fa-95fa-4b9d-9ad2-f24ee080eb66",
+          "advisor_id": "ca888e89-47f0-46f4-882b-ab14d9d4cfb2",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "a364fb16-415f-4e15-b04a-a978b78473d2",
+          "advisor_id": "ca888e89-47f0-46f4-882b-ab14d9d4cfb2",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "444bb6de-4536-4457-b940-703e3f96f754": {
+      "advisor_id": "444bb6de-4536-4457-b940-703e3f96f754",
+      "memories": [
+        {
+          "id": "b3ed4238-ce4f-4b83-88be-8055d147faaa",
+          "advisor_id": "444bb6de-4536-4457-b940-703e3f96f754",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "aef8111f-40fc-46e2-9833-d7ce15f036a1",
+          "advisor_id": "444bb6de-4536-4457-b940-703e3f96f754",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "b0032142-569a-40e1-9819-08d0dad2209e": {
+      "advisor_id": "b0032142-569a-40e1-9819-08d0dad2209e",
+      "memories": [
+        {
+          "id": "9a887ea1-e5a2-4e90-b481-53aa632974cf",
+          "advisor_id": "b0032142-569a-40e1-9819-08d0dad2209e",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "4be2dfc2-8a80-4eb8-b814-31752cf83d36": {
+      "advisor_id": "4be2dfc2-8a80-4eb8-b814-31752cf83d36",
+      "memories": [
+        {
+          "id": "2f635fb4-aafc-4f87-9e8f-ba3bbe0bf29b",
+          "advisor_id": "4be2dfc2-8a80-4eb8-b814-31752cf83d36",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "3ebde78c-cc90-4381-b3b9-a803263eb1f3": {
+      "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+      "memories": [
+        {
+          "id": "2ee3bf89-ef57-4728-919e-8d2bcaf51d6c",
+          "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "faction",
+            "conservative",
+            "politics",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "f0dc1191-46e0-4b4f-b6e3-4cc66c2cadf9",
+          "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "8dae6986-a3b1-4759-a304-6af1e27c913d",
+          "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+          "event_type": "decision",
+          "content": "Launched policy_promotion propaganda campaign: The senate represents the wisdom of tradition and stability",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "policy_promotion",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "71b59f5a-e617-4a08-8b1c-3cacc0b312a4",
+          "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+          "event_type": "decision",
+          "content": "Proposed political reform 'Senate Expansion Act': Expand the senate to include more regional representatives",
+          "emotional_impact": 0.7,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "proposal",
+            "constitutional",
+            "politics",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "24daafee-eee8-43ac-b5a3-8f524208a54c",
+          "advisor_id": "3ebde78c-cc90-4381-b3b9-a803263eb1f3",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "f3710345-3ec3-44f1-834e-83aa8bd8f769": {
+      "advisor_id": "f3710345-3ec3-44f1-834e-83aa8bd8f769",
+      "memories": [
+        {
+          "id": "5edc76e4-a557-431e-a8d0-1d6b36838991",
+          "advisor_id": "f3710345-3ec3-44f1-834e-83aa8bd8f769",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarism",
+            "militarist",
+            "faction",
+            "politics"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "a19fbb09-6888-43d2-b883-3c656c00ecbb",
+          "advisor_id": "f3710345-3ec3-44f1-834e-83aa8bd8f769",
+          "event_type": "decision",
+          "content": "Launched foreign_threat_emphasis propaganda campaign: Our military strength protects the empire from external threats",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "foreign_threat_emphasis",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "3c6d20b8-6377-4fc1-8928-30be239456ae",
+          "advisor_id": "f3710345-3ec3-44f1-834e-83aa8bd8f769",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "bc05196e-baf8-4583-9dd8-9bf6dbade842",
+          "advisor_id": "f3710345-3ec3-44f1-834e-83aa8bd8f769",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "b7a1290e-d8a9-4e8a-9549-895395285229": {
+      "advisor_id": "b7a1290e-d8a9-4e8a-9549-895395285229",
+      "memories": [
+        {
+          "id": "f3c75c2d-ab4c-4230-83de-d035f2d42445",
+          "advisor_id": "b7a1290e-d8a9-4e8a-9549-895395285229",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "d6948408-6bc0-42df-86a9-814eb717fff9",
+          "advisor_id": "b7a1290e-d8a9-4e8a-9549-895395285229",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "8c677107-27ef-4a94-9002-953a780e2d86": {
+      "advisor_id": "8c677107-27ef-4a94-9002-953a780e2d86",
+      "memories": [
+        {
+          "id": "1c09fbaf-baa3-4d9b-a0ba-5685d07cfd36",
+          "advisor_id": "8c677107-27ef-4a94-9002-953a780e2d86",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "3bae388b-95ff-44aa-8d32-578e85a7d46b": {
+      "advisor_id": "3bae388b-95ff-44aa-8d32-578e85a7d46b",
+      "memories": [
+        {
+          "id": "50976388-6e22-48a0-833c-a211cead33b7",
+          "advisor_id": "3bae388b-95ff-44aa-8d32-578e85a7d46b",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "81b600aa-5ea8-49eb-8248-9ac29a0bcb69": {
+      "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+      "memories": [
+        {
+          "id": "5e4d8bfe-49cb-4e94-9364-bd554f54d194",
+          "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "traditionalism",
+            "conservative",
+            "politics",
+            "faction"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "d2c480cd-3335-48ec-a4d7-ead5a723dbec",
+          "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "coup_attempt",
+            "leader",
+            "secret",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "beaebc6c-6ba3-4e6b-b93c-34c913213f85",
+          "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+          "event_type": "decision",
+          "content": "Launched policy_promotion propaganda campaign: The senate represents the wisdom of tradition and stability",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "policy_promotion",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "7cc43ef8-7837-400e-9ca5-45b8418323ac",
+          "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+          "event_type": "decision",
+          "content": "Proposed political reform 'Senate Expansion Act': Expand the senate to include more regional representatives",
+          "emotional_impact": 0.7,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "proposal",
+            "constitutional",
+            "politics",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "b5316e00-270a-40a7-af9d-6322e015db21",
+          "advisor_id": "81b600aa-5ea8-49eb-8248-9ac29a0bcb69",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "3865db96-4e90-4c8e-a171-b1657a79430d": {
+      "advisor_id": "3865db96-4e90-4c8e-a171-b1657a79430d",
+      "memories": [
+        {
+          "id": "11d198f9-5f82-43b0-9851-d9a2973c23f3",
+          "advisor_id": "3865db96-4e90-4c8e-a171-b1657a79430d",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "militarist",
+            "faction",
+            "politics",
+            "militarism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "a9744521-fe5e-4b0a-8f8b-550a53391169",
+          "advisor_id": "3865db96-4e90-4c8e-a171-b1657a79430d",
+          "event_type": "decision",
+          "content": "Launched foreign_threat_emphasis propaganda campaign: Our military strength protects the empire from external threats",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "foreign_threat_emphasis",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "eead2b64-0e4d-4097-b252-f86991c0c0a8",
+          "advisor_id": "3865db96-4e90-4c8e-a171-b1657a79430d",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "3fac0f46-cbb6-4b19-84ac-97afa47b7ccf",
+          "advisor_id": "3865db96-4e90-4c8e-a171-b1657a79430d",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "9fb94443-15e4-4bb9-8c5b-34a13d0cb6df": {
+      "advisor_id": "9fb94443-15e4-4bb9-8c5b-34a13d0cb6df",
+      "memories": [
+        {
+          "id": "ff312d9b-1e9f-4539-a3ae-ffef8841fac5",
+          "advisor_id": "9fb94443-15e4-4bb9-8c5b-34a13d0cb6df",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "95260f79-1e8a-4368-a623-6ab5ac98ae34",
+          "advisor_id": "9fb94443-15e4-4bb9-8c5b-34a13d0cb6df",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "121b80a5-5679-4f56-8cc8-b5714159be18": {
+      "advisor_id": "121b80a5-5679-4f56-8cc8-b5714159be18",
+      "memories": [
+        {
+          "id": "6ff751fb-8707-4c77-ad0c-0aaadb63da2a",
+          "advisor_id": "121b80a5-5679-4f56-8cc8-b5714159be18",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "eb7cc52b-cc58-4b5c-b431-8db0b43d338c": {
+      "advisor_id": "eb7cc52b-cc58-4b5c-b431-8db0b43d338c",
+      "memories": [
+        {
+          "id": "c53d8df0-5f89-47ae-b1e9-eee9e42e490f",
+          "advisor_id": "eb7cc52b-cc58-4b5c-b431-8db0b43d338c",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "instability",
+            "succession",
+            "multiple_claimants",
+            "crisis"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    }
+  },
+  "shared_memories": []
+}
