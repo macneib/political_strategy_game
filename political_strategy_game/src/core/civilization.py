@@ -7,10 +7,11 @@ from enum import Enum
 from pydantic import BaseModel, Field
 import uuid
 
-from .advisor import Advisor, AdvisorRole, AdvisorStatus
+from .advisor import AdvisorRole, AdvisorStatus
+from .advisor_enhanced import AdvisorWithMemory, AdvisorCouncil, PersonalityProfile
 from .leader import Leader, LeadershipStyle
-from .memory import MemoryBank
-from .political_event import PoliticalEvent, EventFactory, EventProcessor
+from .memory import MemoryBank, MemoryManager, Memory, MemoryType
+from .events import EventManager, PoliticalEvent, EventType, EventSeverity
 
 
 class PoliticalStability(str, Enum):
@@ -54,19 +55,23 @@ class PoliticalState(BaseModel):
 class Civilization(BaseModel):
     """Complete civilization with political dynamics."""
     
+    model_config = {"arbitrary_types_allowed": True}
+    
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     current_turn: int = Field(default=1)
     
     # Leadership
     leader: Leader
-    advisors: Dict[str, Advisor] = Field(default_factory=dict)
+    advisors: Dict[str, AdvisorWithMemory] = Field(default_factory=dict)
     
     # Political state
     political_state: PoliticalState = Field(default_factory=PoliticalState)
     memory_bank: Optional[MemoryBank] = Field(default=None)
+    memory_manager: Optional[MemoryManager] = Field(default=None, exclude=True)
     
     # Event management
+    event_manager: Optional[EventManager] = Field(default=None, exclude=True)
     event_history: List[PoliticalEvent] = Field(default_factory=list)
     pending_events: List[PoliticalEvent] = Field(default_factory=list)
     
@@ -75,11 +80,29 @@ class Civilization(BaseModel):
     espionage_capabilities: Dict[str, float] = Field(default_factory=dict)
     
     def model_post_init(self, __context):
-        """Initialize computed fields after model creation."""
-        if self.memory_bank is None:
-            self.memory_bank = MemoryBank(civilization_id=self.id)
+        """Initialize managers after model creation."""
+        # Initialize memory bank
+        self.memory_bank = MemoryBank(civilization_id=self.id)
+        
+        # Initialize memory manager with temporary directory for tests
+        # In real usage, this would be set externally
+        import tempfile
+        from pathlib import Path
+        temp_dir = Path(tempfile.gettempdir()) / "civilization_memory" / self.id
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        self.memory_manager = MemoryManager(data_dir=temp_dir)
+        
+        # Initialize event manager
+        self.event_manager = EventManager(civilization_id=self.id, current_turn=self.current_turn)
     
-    def add_advisor(self, advisor: Advisor) -> bool:
+    def set_memory_manager(self, memory_manager: MemoryManager) -> None:
+        """Set the memory manager for this civilization."""
+        self.memory_manager = memory_manager
+        # Register all advisors with the memory manager
+        for advisor in self.advisors.values():
+            memory_manager.register_advisor(advisor.id, self.id)
+    
+    def add_advisor(self, advisor: AdvisorWithMemory) -> bool:
         """Add a new advisor to the civilization."""
         if advisor.role in [a.role for a in self.advisors.values() if a.status == AdvisorStatus.ACTIVE]:
             return False  # Role already filled
@@ -90,16 +113,19 @@ class Civilization(BaseModel):
         
         self.advisors[advisor.id] = advisor
         
-        # Create appointment event
-        event = EventFactory.create_appointment_event(
-            civilization_id=self.id,
-            leader_id=self.leader.id,
+        # Create appointment memory for the advisor
+        appointment_memory = Memory(
             advisor_id=advisor.id,
-            role=advisor.role.value,
-            action="appoint",
-            turn=self.current_turn
+            event_type=MemoryType.DECISION,
+            content=f"Appointed to {advisor.role.value} position in {self.name}",
+            emotional_impact=0.3,
+            created_turn=self.current_turn,
+            last_accessed_turn=self.current_turn,
+            tags={"appointment", advisor.role.value, "leadership"}
         )
-        self.event_history.append(event)
+        
+        if self.memory_manager:
+            self.memory_manager.store_memory(advisor.id, appointment_memory)
         
         return True
     
@@ -114,29 +140,31 @@ class Civilization(BaseModel):
         
         advisor.status = AdvisorStatus.DISMISSED
         
-        # Create dismissal event
-        event = EventFactory.create_appointment_event(
-            civilization_id=self.id,
-            leader_id=self.leader.id,
+        # Create dismissal memory
+        dismissal_memory = Memory(
             advisor_id=advisor_id,
-            role=advisor.role.value,
-            action="dismiss",
-            turn=self.current_turn
+            event_type=MemoryType.CRISIS,
+            content=f"Dismissed from {advisor.role.value} position for {reason}",
+            emotional_impact=0.8,
+            created_turn=self.current_turn,
+            last_accessed_turn=self.current_turn,
+            tags={"dismissal", advisor.role.value, reason}
         )
-        event.context["reason"] = reason
-        self.event_history.append(event)
+        
+        if self.memory_manager:
+            self.memory_manager.store_memory(advisor_id, dismissal_memory)
         
         # Update political state
         self._update_political_stability()
         
         return True
     
-    def get_active_advisors(self) -> List[Advisor]:
+    def get_active_advisors(self) -> List[AdvisorWithMemory]:
         """Get all currently active advisors."""
         return [advisor for advisor in self.advisors.values() 
                 if advisor.status == AdvisorStatus.ACTIVE]
     
-    def get_advisor_by_role(self, role: AdvisorRole) -> Optional[Advisor]:
+    def get_advisor_by_role(self, role: AdvisorRole) -> Optional[AdvisorWithMemory]:
         """Get the current advisor for a specific role."""
         for advisor in self.advisors.values():
             if advisor.role == role and advisor.status == AdvisorStatus.ACTIVE:
@@ -233,15 +261,23 @@ class Civilization(BaseModel):
         import random
         success = random.random() < success_chance
         
-        # Create coup event
-        event = EventFactory.create_coup_event(
-            civilization_id=self.id,
-            conspirators=conspirators,
-            target_leader_id=self.leader.id,
-            success=success,
-            turn=self.current_turn
-        )
-        self.event_history.append(event)
+        # Create coup memories for all involved parties
+        coup_content = f"{'Successful' if success else 'Failed'} coup attempt by {len(conspirators)} conspirators"
+        
+        for conspirator_id in conspirators:
+            if conspirator_id in self.advisors:
+                coup_memory = Memory(
+                    advisor_id=conspirator_id,
+                    event_type=MemoryType.CONSPIRACY,
+                    content=coup_content,
+                    emotional_impact=0.9 if success else 0.7,
+                    created_turn=self.current_turn,
+                    last_accessed_turn=self.current_turn,
+                    tags={"coup", "conspiracy", "success" if success else "failure"}
+                )
+                
+                if self.memory_manager:
+                    self.memory_manager.store_memory(conspirator_id, coup_memory)
         
         if success:
             self._execute_successful_coup(conspirators[0])  # First conspirator becomes leader
