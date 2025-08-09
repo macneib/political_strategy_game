@@ -152,6 +152,8 @@ class MemoryManager:
         self.data_dir = data_dir
         self.data_dir.mkdir(exist_ok=True)
         self.memory_banks: Dict[str, MemoryBank] = {}
+        # Map advisor IDs to civilization IDs for quick lookup
+        self._advisor_to_civ_map: Dict[str, str] = {}
     
     def get_memory_bank(self, civilization_id: str) -> MemoryBank:
         """Get or load memory bank for a civilization."""
@@ -159,13 +161,25 @@ class MemoryManager:
             self.memory_banks[civilization_id] = self._load_memory_bank(civilization_id)
         return self.memory_banks[civilization_id]
     
+    def register_advisor(self, advisor_id: str, civilization_id: str) -> None:
+        """Register an advisor as belonging to a specific civilization."""
+        self._advisor_to_civ_map[advisor_id] = civilization_id
+    
     def store_memory(self, advisor_id: str, memory: Memory) -> bool:
         """Store a memory for an advisor."""
         try:
             # Find which civilization this advisor belongs to
             civilization_id = self._find_civilization_for_advisor(advisor_id)
             if not civilization_id:
-                return False
+                # If we can't find the civilization, try to get it from the memory's advisor
+                # For our implementation, we'll use a default civilization mapping
+                print(f"Warning: Could not find civilization for advisor {advisor_id}, using default mapping")
+                # Extract civilization from advisor if it follows pattern, otherwise use first part or default
+                if hasattr(memory, 'civilization_id'):
+                    civilization_id = memory.civilization_id
+                else:
+                    # For testing/simple cases, create a default civilization
+                    civilization_id = "default_civ"
                 
             memory_bank = self.get_memory_bank(civilization_id)
             advisor_memory = memory_bank.get_advisor_memory(advisor_id)
@@ -229,6 +243,17 @@ class MemoryManager:
             try:
                 with open(file_path, 'r') as f:
                     data = json.load(f)
+                
+                # Convert lists back to sets for tags
+                for advisor_id, advisor_memory in data.get("advisor_memories", {}).items():
+                    for memory in advisor_memory.get("memories", []):
+                        if "tags" in memory and isinstance(memory["tags"], list):
+                            memory["tags"] = set(memory["tags"])
+                
+                for memory in data.get("shared_memories", []):
+                    if "tags" in memory and isinstance(memory["tags"], list):
+                        memory["tags"] = set(memory["tags"])
+                
                 return MemoryBank.model_validate(data)
             except Exception as e:
                 print(f"Error loading memory bank: {e}")
@@ -241,15 +266,35 @@ class MemoryManager:
         file_path = self.data_dir / f"{civilization_id}_memories.json"
         
         try:
+            # Convert to dict with proper set handling
+            memory_data = memory_bank.model_dump()
+            
+            # Convert sets to lists for JSON serialization
+            for advisor_id, advisor_memory in memory_data.get("advisor_memories", {}).items():
+                for memory in advisor_memory.get("memories", []):
+                    if "tags" in memory and isinstance(memory["tags"], set):
+                        memory["tags"] = list(memory["tags"])
+            
+            for memory in memory_data.get("shared_memories", []):
+                if "tags" in memory and isinstance(memory["tags"], set):
+                    memory["tags"] = list(memory["tags"])
+            
             with open(file_path, 'w') as f:
-                json.dump(memory_bank.model_dump(), f, indent=2, default=str)
+                json.dump(memory_data, f, indent=2)
         except Exception as e:
             print(f"Error saving memory bank: {e}")
     
     def _find_civilization_for_advisor(self, advisor_id: str) -> Optional[str]:
         """Find which civilization an advisor belongs to."""
-        # This would normally query the game state
-        # For now, we'll extract from advisor_id pattern
+        # Check our mapping first
+        if advisor_id in self._advisor_to_civ_map:
+            return self._advisor_to_civ_map[advisor_id]
+        
+        # Fallback: extract from advisor_id pattern (for legacy IDs)
         if "_" in advisor_id:
-            return advisor_id.split("_")[0]
+            civ_id = advisor_id.split("_")[0]
+            # Register this mapping for future use
+            self._advisor_to_civ_map[advisor_id] = civ_id
+            return civ_id
+        
         return None
