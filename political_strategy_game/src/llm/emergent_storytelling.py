@@ -87,8 +87,8 @@ class NarrativeThread:
             EmotionalState.WORRIED: 0.7,
             EmotionalState.EXCITED: 0.6,
             EmotionalState.SUSPICIOUS: 0.7,
-            EmotionalState.DETERMINED: 0.5,
-            EmotionalState.DISAPPOINTED: 0.4,
+            EmotionalState.FRUSTRATED: 0.5,
+            EmotionalState.HOPEFUL: 0.4,
             EmotionalState.CONFIDENT: 0.3,
             EmotionalState.CALM: 0.2
         }
