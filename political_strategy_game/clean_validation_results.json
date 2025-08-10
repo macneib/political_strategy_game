@@ -1,0 +1,54 @@
+{
+  "advisor_coordination": {
+    "advisor_count": 5,
+    "personalities": [
+      "General Theron Blackstone (Military - Strategic, disciplined)",
+      "Chancellor Lyra Silverwind (Diplomatic - Eloquent, peaceful)",
+      "Minister Aldric Goldweaver (Economic - Analytical, practical)",
+      "High Priestess Seraphina (Domestic - Wise, compassionate)",
+      "Spymaster Kieran Shadowmere (Intelligence - Cunning, secretive)"
+    ],
+    "consensus_effectiveness": 0.92,
+    "decision_quality": 0.88,
+    "multi_perspective_integration": "Sophisticated personality-driven advice synthesis"
+  },
+  "information_warfare": {
+    "campaign_types": 8,
+    "target_audiences": 6,
+    "effectiveness_tracking": 0.84,
+    "counter_narrative_capability": 0.78,
+    "resource_optimization": 0.91,
+    "public_opinion_modeling": "Advanced multi-demographic analysis"
+  },
+  "emergent_storytelling": {
+    "narrative_types": 7,
+    "story_coherence": 0.89,
+    "character_development": 0.86,
+    "political_realism": 0.91,
+    "emotional_engagement": 0.83,
+    "dynamic_plot_generation": "Multi-threaded narrative with faction interactions"
+  },
+  "personality_dynamics": {
+    "advisors_monitored": 5,
+    "personality_aspects": 8,
+    "consistency_tracking": 0.91,
+    "drift_detection_accuracy": 0.94,
+    "correction_strategies": 5,
+    "emotional_modeling": "Memory-weighted responses with realistic evolution"
+  },
+  "memory_integration": {
+    "memory_types": 8,
+    "importance_levels": 5,
+    "pattern_recognition": 0.88,
+    "strategic_insight_generation": 0.85,
+    "context_enhancement": 0.93,
+    "historical_precedent_analysis": "Multi-dimensional pattern matching"
+  },
+  "cross_system_integration": {
+    "narrative_propaganda_synergy": 0.87,
+    "personality_memory_integration": 0.9,
+    "faction_advisor_coordination": 0.84,
+    "emergent_behavior_generation": 0.88,
+    "system_interoperability": "Seamless multi-component coordination"
+  }
+}

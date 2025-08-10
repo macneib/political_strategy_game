@@ -15,9 +15,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -39,10 +39,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         }
@@ -63,9 +63,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -87,10 +87,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         }
@@ -111,9 +111,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -129,9 +129,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -153,10 +153,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         }
@@ -177,9 +177,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -195,9 +195,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -219,10 +219,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         }
@@ -243,9 +243,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -261,9 +261,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -296,8 +296,8 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "proposal",
             "constitutional",
+            "proposal",
             "politics",
             "reform"
           ],
@@ -320,10 +320,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         },
@@ -401,9 +401,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -419,9 +419,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -454,8 +454,8 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "proposal",
             "constitutional",
+            "proposal",
             "politics",
             "reform"
           ],
@@ -472,10 +472,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -496,10 +496,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         },
@@ -548,10 +548,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -589,10 +589,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -613,10 +613,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -637,10 +637,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -661,9 +661,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "faction",
-            "conservative",
             "politics",
+            "conservative",
+            "faction",
             "traditionalism"
           ],
           "source_advisor_id": null
@@ -679,9 +679,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -714,8 +714,8 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "proposal",
             "constitutional",
+            "proposal",
             "politics",
             "reform"
           ],
@@ -732,10 +732,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -756,10 +756,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "militarism",
+            "politics",
             "militarist",
             "faction",
-            "politics"
+            "militarism"
           ],
           "source_advisor_id": null
         },
@@ -808,10 +808,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -849,10 +849,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -873,10 +873,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -897,10 +897,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -921,10 +921,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "traditionalism",
-            "conservative",
             "politics",
-            "faction"
+            "traditionalism",
+            "faction",
+            "conservative"
           ],
           "source_advisor_id": null
         },
@@ -939,9 +939,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "coup_attempt",
             "leader",
             "secret",
+            "coup_attempt",
             "conspiracy"
           ],
           "source_advisor_id": null
@@ -974,8 +974,8 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "proposal",
             "constitutional",
+            "proposal",
             "politics",
             "reform"
           ],
@@ -992,10 +992,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -1016,9 +1016,9 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
+            "politics",
             "militarist",
             "faction",
-            "politics",
             "militarism"
           ],
           "source_advisor_id": null
@@ -1068,10 +1068,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -1109,10 +1109,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -1133,10 +1133,10 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
@@ -1157,10 +1157,270 @@
           "created_turn": 1,
           "last_accessed_turn": 1,
           "tags": [
-            "instability",
-            "succession",
             "multiple_claimants",
-            "crisis"
+            "succession",
+            "crisis",
+            "instability"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "e51c5fc0-8341-42f2-9c23-ff3f21c540ce": {
+      "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+      "memories": [
+        {
+          "id": "71fa608d-9bb7-45c0-b0a4-84a8fc90e604",
+          "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+          "event_type": "decision",
+          "content": "Founded political faction 'Traditionalist Senate' with traditionalism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "politics",
+            "conservative",
+            "faction",
+            "traditionalism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "32cd8929-a223-4519-913f-d9ce98485928",
+          "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+          "event_type": "conspiracy",
+          "content": "Formed secret conspiracy: Overthrow the current power structure",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "leader",
+            "secret",
+            "coup_attempt",
+            "conspiracy"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "718f4f97-2ff1-4ff1-81cb-4f3b1542e95c",
+          "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+          "event_type": "decision",
+          "content": "Launched policy_promotion propaganda campaign: The senate represents the wisdom of tradition and stability",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "policy_promotion",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "ef4ee9e6-7f69-40e1-8bd3-0070e515f7d2",
+          "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+          "event_type": "decision",
+          "content": "Proposed political reform 'Senate Expansion Act': Expand the senate to include more regional representatives",
+          "emotional_impact": 0.7,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "politics",
+            "proposal",
+            "constitutional",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "7f83d144-ffbd-4ba1-a119-ba0c2e51656e",
+          "advisor_id": "e51c5fc0-8341-42f2-9c23-ff3f21c540ce",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "multiple_claimants",
+            "succession",
+            "crisis",
+            "instability"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "be4609db-b5a2-45fe-976d-5ad80c5a6f7f": {
+      "advisor_id": "be4609db-b5a2-45fe-976d-5ad80c5a6f7f",
+      "memories": [
+        {
+          "id": "9af12f8c-9c5b-4457-99b1-1fee1e5fe6b3",
+          "advisor_id": "be4609db-b5a2-45fe-976d-5ad80c5a6f7f",
+          "event_type": "decision",
+          "content": "Founded political faction 'Military Order' with militarism ideology",
+          "emotional_impact": 0.8,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "politics",
+            "militarist",
+            "faction",
+            "militarism"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "316189cc-7e10-4273-8d0a-c4671224c6ff",
+          "advisor_id": "be4609db-b5a2-45fe-976d-5ad80c5a6f7f",
+          "event_type": "decision",
+          "content": "Launched foreign_threat_emphasis propaganda campaign: Our military strength protects the empire from external threats",
+          "emotional_impact": 0.6,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "propaganda",
+            "foreign_threat_emphasis",
+            "information_warfare"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "71ae0254-492b-45fa-bf48-a6594bb1af2e",
+          "advisor_id": "be4609db-b5a2-45fe-976d-5ad80c5a6f7f",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "39dbfbf7-06e8-460c-bc81-2574d22bce8b",
+          "advisor_id": "be4609db-b5a2-45fe-976d-5ad80c5a6f7f",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "multiple_claimants",
+            "succession",
+            "crisis",
+            "instability"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "1129cbe6-b385-455b-9f85-8b7597667953": {
+      "advisor_id": "1129cbe6-b385-455b-9f85-8b7597667953",
+      "memories": [
+        {
+          "id": "d106cc93-f5fe-42ad-bcdd-71b842a3da32",
+          "advisor_id": "1129cbe6-b385-455b-9f85-8b7597667953",
+          "event_type": "decision",
+          "content": "Voted for reform 'Senate Expansion Act'",
+          "emotional_impact": 0.5,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "vote",
+            "support",
+            "reform"
+          ],
+          "source_advisor_id": null
+        },
+        {
+          "id": "99de5279-2aa7-49d1-b138-dcbed5baa192",
+          "advisor_id": "1129cbe6-b385-455b-9f85-8b7597667953",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "multiple_claimants",
+            "succession",
+            "crisis",
+            "instability"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "dfad6f2f-620e-40cf-b35d-0520222387f4": {
+      "advisor_id": "dfad6f2f-620e-40cf-b35d-0520222387f4",
+      "memories": [
+        {
+          "id": "c8884424-b083-4257-8cdb-2ec3b5c5be72",
+          "advisor_id": "dfad6f2f-620e-40cf-b35d-0520222387f4",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "multiple_claimants",
+            "succession",
+            "crisis",
+            "instability"
+          ],
+          "source_advisor_id": null
+        }
+      ],
+      "memory_capacity": 1000
+    },
+    "17cc33c4-a711-47c8-aae6-9ac5d2d81367": {
+      "advisor_id": "17cc33c4-a711-47c8-aae6-9ac5d2d81367",
+      "memories": [
+        {
+          "id": "4203d2f1-16ec-4ba8-b5b1-3885b0638bc7",
+          "advisor_id": "17cc33c4-a711-47c8-aae6-9ac5d2d81367",
+          "event_type": "crisis",
+          "content": "Succession crisis triggered: multiple_claimants",
+          "emotional_impact": 0.9,
+          "reliability": 1.0,
+          "decay_rate": 0.02,
+          "created_turn": 1,
+          "last_accessed_turn": 1,
+          "tags": [
+            "multiple_claimants",
+            "succession",
+            "crisis",
+            "instability"
           ],
           "source_advisor_id": null
         }
