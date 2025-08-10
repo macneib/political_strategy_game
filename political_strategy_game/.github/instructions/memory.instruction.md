@@ -6,6 +6,7 @@ applyTo: '**'
 
 ## User Preferences
 - Programming languages: Python (primary), modern tooling with uv package management
+- Package management: Use uv instead of pip for all Python package operations
 - Code style preferences: Clean, modular, well-documented code with comprehensive testing
 - Development environment: Linux, VS Code, collaborative development focus
 - Communication style: Technical and thorough, focused on implementation details
