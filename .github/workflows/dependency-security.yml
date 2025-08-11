@@ -239,6 +239,8 @@ jobs:
         
         try:
             from src.core.civilization import Civilization
+            from src.core.leader import Leader, LeadershipStyle
+            from src.core.advisor import PersonalityProfile
             from src.llm.advisors import AdvisorPersonality
             
             print(f'Initial memory usage: {initial_memory:.2f} MB')
@@ -248,7 +250,19 @@ jobs:
             start_time = time.time()
             
             for i in range(10):
-                civ = Civilization(f'Empire_{i}')
+                personality = PersonalityProfile(
+                    ambition=0.7, loyalty=0.8, cunning=0.5, wisdom=0.6,
+                    aggression=0.4, caution=0.7, charisma=0.8, integrity=0.9
+                )
+                
+                leader = Leader(
+                    name=f'Leader_{i}',
+                    civilization_id=f'empire_{i}',
+                    personality=personality,
+                    leadership_style=LeadershipStyle.COLLABORATIVE
+                )
+                
+                civ = Civilization(name=f'Empire_{i}', leader=leader)
                 civs.append(civ)
                 
                 # Check memory every few civilizations
