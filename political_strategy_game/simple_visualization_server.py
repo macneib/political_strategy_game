@@ -63,32 +63,294 @@ class VisualizationServer(BaseHTTPRequestHandler):
     
     def serve_html_page(self):
         """Serve the live visualization HTML page."""
-        try:
-            # Try multiple possible locations for the HTML file
-            html_paths = [
-                'live_visualization.html',
-                '/home/macneib/political_strategy_game/political_strategy_game/live_visualization.html',
-                os.path.join(os.path.dirname(__file__), 'live_visualization.html')
-            ]
+        # Embedded HTML content instead of reading from file
+        html_content = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Strategy Game - Live Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #1a1a2e; color: #eee; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { text-align: center; color: #4fc3f7; margin-bottom: 30px; }
+        .status-bar { background: #16213e; border: 1px solid #4fc3f7; border-radius: 5px; padding: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .connection-status { display: flex; align-items: center; gap: 10px; }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background: #ff6b6b; }
+        .status-indicator.connected { background: #4ecdc4; }
+        .btn { background: #4fc3f7; color: #1a1a2e; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 0 5px; }
+        .btn:hover { background: #45a7d1; }
+        .visualization-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 20px; height: 75vh; }
+        .viz-panel { background: #16213e; border: 2px solid #4fc3f7; border-radius: 10px; padding: 15px; position: relative; }
+        .viz-title { color: #4fc3f7; font-size: 18px; font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .last-update { font-size: 12px; color: #999; font-weight: normal; }
+        .network-container { grid-column: 1 / 3; }
+        .node { stroke: #4fc3f7; stroke-width: 2px; cursor: pointer; }
+        .node.advisor { fill: #ff6b6b; }
+        .node.leader { fill: #4ecdc4; }
+        .link { stroke: #999; stroke-opacity: 0.6; }
+        .link.trust { stroke: #4ecdc4; }
+        .link.conflict { stroke: #ff6b6b; }
+        .link.influence { stroke: #feca57; }
+        .timeline-event { fill: #4fc3f7; stroke: #fff; stroke-width: 1px; cursor: pointer; }
+        .timeline-event.political { fill: #ff6b6b; }
+        .timeline-event.military { fill: #feca57; }
+        .timeline-event.economic { fill: #4ecdc4; }
+        .metric-box { background: #0f3460; border: 1px solid #4fc3f7; border-radius: 5px; padding: 10px; margin: 5px 0; text-align: center; }
+        .metric-value { font-size: 24px; font-weight: bold; color: #4fc3f7; }
+        .metric-label { font-size: 12px; color: #ccc; }
+        .alert { background: #ff6b6b; color: white; padding: 5px 10px; border-radius: 3px; margin: 2px 0; font-size: 12px; }
+        .memory-item { background: #0f3460; border-left: 3px solid #4fc3f7; padding: 8px; margin: 5px 0; border-radius: 3px; }
+        .memory-timestamp { font-size: 10px; color: #999; }
+        .demo-note { background: #2d1b69; border: 1px solid #6c5ce7; border-radius: 5px; padding: 10px; margin: 10px 0; font-size: 14px; color: #a29bfe; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Political Strategy Game - Live Visualization Dashboard</h1>
+        
+        <div class="status-bar">
+            <div class="connection-status">
+                <div class="status-indicator" id="connection-indicator"></div>
+                <span id="connection-text">Ready to connect...</span>
+            </div>
+            <div>
+                <button class="btn" id="connect-btn" onclick="connectToBackend()">Connect</button>
+                <button class="btn" onclick="simulateEvent()">Simulate Event</button>
+                <button class="btn" onclick="clearData()">Clear Data</button>
+            </div>
+        </div>
+        
+        <div class="visualization-grid">
+            <div class="viz-panel network-container">
+                <div class="viz-title">🕸️ Advisor Relationship Network <span class="last-update" id="network-update">Never updated</span></div>
+                <svg id="network-graph" width="100%" height="300"></svg>
+            </div>
             
-            content = None
-            for path in html_paths:
-                try:
-                    with open(path, 'r') as f:
-                        content = f.read()
-                    break
-                except FileNotFoundError:
-                    continue
+            <div class="viz-panel">
+                <div class="viz-title">📅 Political Event Timeline <span class="last-update" id="timeline-update">Never updated</span></div>
+                <svg id="timeline" width="100%" height="180"></svg>
+            </div>
             
-            if content is None:
-                raise FileNotFoundError("Could not find live_visualization.html in any expected location")
+            <div class="viz-panel">
+                <div class="viz-title">📊 Political Status Dashboard <span class="last-update" id="dashboard-update">Never updated</span></div>
+                <div id="dashboard"></div>
+            </div>
             
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            self.wfile.write(content.encode())
-        except FileNotFoundError as e:
-            self.send_error(404, f"HTML file not found: {str(e)}")
+            <div class="viz-panel">
+                <div class="viz-title">🧠 Memory System Browser <span class="last-update" id="memory-update">Never updated</span></div>
+                <div id="memory-browser"></div>
+            </div>
+        </div>
+        
+        <div class="demo-note">
+            <strong>🔄 Live Updates:</strong> Connected to real backend visualization system. Data updates every 2-3 seconds.
+        </div>
+    </div>
+
+    <script>
+        let isConnected = false;
+        let networkData = { nodes: [], links: [] };
+        let timelineData = [];
+        let networkSvg, timelineSvg, simulation;
+        
+        function initializeVisualizations() {
+            networkSvg = d3.select("#network-graph");
+            timelineSvg = d3.select("#timeline");
+            
+            const width = networkSvg.node().getBoundingClientRect().width;
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(80))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, 150));
+            
+            initializeDashboard();
+            initializeMemoryBrowser();
+        }
+        
+        function connectToBackend() {
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            if (!isConnected) {
+                isConnected = true;
+                indicator.classList.add('connected');
+                statusText.textContent = 'Connected to Backend';
+                connectBtn.textContent = 'Disconnect';
+                
+                // Start polling for updates
+                pollBackendData();
+                setInterval(pollBackendData, 2000);
+            } else {
+                disconnect();
+            }
+        }
+        
+        function disconnect() {
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            isConnected = false;
+            indicator.classList.remove('connected');
+            statusText.textContent = 'Disconnected';
+            connectBtn.textContent = 'Connect';
+        }
+        
+        async function pollBackendData() {
+            if (!isConnected) return;
+            
+            try {
+                const [networkResp, timelineResp, dashboardResp, memoryResp] = await Promise.all([
+                    fetch('/api/network'),
+                    fetch('/api/timeline'),
+                    fetch('/api/dashboard'),
+                    fetch('/api/memory')
+                ]);
+                
+                const networkData = await networkResp.json();
+                const timelineData = await timelineResp.json();
+                const dashboardData = await dashboardResp.json();
+                const memoryData = await memoryResp.json();
+                
+                updateNetwork(networkData);
+                updateTimeline(timelineData.events);
+                updateDashboard(dashboardData);
+                updateMemoryBrowser(memoryData.memories);
+                
+            } catch (error) {
+                console.log('Error polling backend:', error);
+            }
+        }
+        
+        function updateNetwork(data) {
+            if (!data || !data.nodes) return;
+            
+            const width = networkSvg.node().getBoundingClientRect().width;
+            networkSvg.selectAll("*").remove();
+            
+            const link = networkSvg.append("g").selectAll("line").data(data.links).enter().append("line")
+                .attr("class", d => `link ${d.type}`).attr("stroke-width", d => Math.sqrt(d.strength * 5));
+            
+            const node = networkSvg.append("g").selectAll("circle").data(data.nodes).enter().append("circle")
+                .attr("class", d => `node ${d.type}`).attr("r", d => d.type === "leader" ? 20 : 15);
+            
+            const labels = networkSvg.append("g").selectAll("text").data(data.nodes).enter().append("text")
+                .text(d => d.name).attr("font-size", "12px").attr("fill", "#eee").attr("text-anchor", "middle").attr("dy", 30);
+            
+            simulation.nodes(data.nodes).force("link").links(data.links);
+            simulation.restart();
+            
+            simulation.on("tick", () => {
+                link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                node.attr("cx", d => d.x).attr("cy", d => d.y);
+                labels.attr("x", d => d.x).attr("y", d => d.y);
+            });
+            
+            document.getElementById('network-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function updateTimeline(events) {
+            if (!events) events = [];
+            
+            const width = timelineSvg.node().getBoundingClientRect().width;
+            const height = 180;
+            timelineSvg.selectAll("*").remove();
+            
+            timelineSvg.append("line").attr("x1", 20).attr("y1", height - 20).attr("x2", width - 20).attr("y2", height - 20)
+                .attr("stroke", "#4fc3f7").attr("stroke-width", 2);
+            
+            timelineSvg.selectAll("circle").data(events).enter().append("circle")
+                .attr("class", d => `timeline-event ${d.type}`)
+                .attr("cx", d => d.time * (width - 40) + 20)
+                .attr("cy", d => height - (d.severity * 80 + 40))
+                .attr("r", d => d.severity * 8 + 4);
+            
+            document.getElementById('timeline-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function initializeDashboard() {
+            updateDashboard({ coup_probability: 0.15, political_stability: 0.85, active_factions: 8, alerts: [] });
+        }
+        
+        function updateDashboard(metrics) {
+            const dashboard = d3.select("#dashboard");
+            dashboard.selectAll("*").remove();
+            
+            [
+                { key: 'coup_probability', label: 'Coup Probability', format: d => Math.round(d * 100) + '%' },
+                { key: 'political_stability', label: 'Political Stability', format: d => Math.round(d * 100) + '%' },
+                { key: 'active_factions', label: 'Active Factions', format: d => d.toString() }
+            ].forEach(metric => {
+                const box = dashboard.append("div").attr("class", "metric-box");
+                box.append("div").attr("class", "metric-value").text(metric.format(metrics[metric.key] || 0));
+                box.append("div").attr("class", "metric-label").text(metric.label);
+            });
+            
+            if (metrics.alerts) {
+                metrics.alerts.forEach(alert => {
+                    dashboard.append("div").attr("class", "alert").text(alert);
+                });
+            }
+            
+            document.getElementById('dashboard-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function initializeMemoryBrowser() {
+            updateMemoryBrowser([{ id: 1, advisor: "System", content: "Visualization system initialized", timestamp: new Date() }]);
+        }
+        
+        function updateMemoryBrowser(memories) {
+            if (!memories) memories = [];
+            
+            const memoryBrowser = d3.select("#memory-browser");
+            memoryBrowser.selectAll("*").remove();
+            
+            memories.slice(-10).forEach(memory => {
+                const item = memoryBrowser.append("div").attr("class", "memory-item");
+                item.append("strong").text(memory.advisor + ": ");
+                item.append("span").text(memory.content);
+                item.append("div").attr("class", "memory-timestamp").text(formatTimeAgo(memory.timestamp));
+            });
+            
+            document.getElementById('memory-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = Math.abs(now - new Date(timestamp)) / 1000;
+            if (diff < 60) return `${Math.floor(diff)} seconds ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+            return `${Math.floor(diff / 3600)} hours ago`;
+        }
+        
+        function simulateEvent() {
+            // Trigger a manual update
+            if (isConnected) pollBackendData();
+        }
+        
+        function clearData() {
+            networkSvg.selectAll("*").remove();
+            timelineSvg.selectAll("*").remove();
+            d3.select("#dashboard").selectAll("*").remove();
+            d3.select("#memory-browser").selectAll("*").remove();
+            
+            initializeDashboard();
+            initializeMemoryBrowser();
+        }
+        
+        document.addEventListener('DOMContentLoaded', initializeVisualizations);
+    </script>
+</body>
+</html>'''
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(html_content.encode())
     
     def serve_status(self):
         """Serve system status."""
