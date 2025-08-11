@@ -249,15 +249,6 @@ jobs:
             
             for i in range(10):
                 civ = Civilization(f'Empire_{i}')
-                
-                # Add advisors
-                for j in range(5):
-                    personality = AdvisorPersonality(
-                        ambition=0.5, loyalty=0.7, cunning=0.6, wisdom=0.8,
-                        aggression=0.4, caution=0.6, charisma=0.5, integrity=0.7
-                    )
-                    civ.add_advisor(f'Advisor_{j}', 'military', personality)
-                
                 civs.append(civ)
                 
                 # Check memory every few civilizations

@@ -7,15 +7,12 @@ from pathlib import Path
 import json
 import random
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
-
 try:
-    from core.advisor import Advisor, PersonalityProfile, AdvisorRole, AdvisorStatus
-    from core.leader import Leader, LeadershipStyle
-    from core.civilization import Civilization, PoliticalState
-    from core.memory import MemoryManager
-    from core.political_event import EventFactory
+    from src.core.advisor import Advisor, PersonalityProfile, AdvisorRole, AdvisorStatus
+    from src.core.leader import Leader, LeadershipStyle
+    from src.core.civilization import Civilization, PoliticalState
+    from src.core.memory import MemoryManager
+    from src.core.political_event import EventFactory
     DEPENDENCIES_AVAILABLE = True
 except ImportError as e:
     print(f"Dependencies not available: {e}")
