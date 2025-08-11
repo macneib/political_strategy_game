@@ -298,12 +298,12 @@ class TestMultiAdvisorCoordination:
             baseline_snapshot = PersonalitySnapshot(
                 advisor_name="Ambassador Chen Wei",
                 timestamp=datetime.now(),
-                aspects={"communication_style": 0.8, "decision_making": 0.7}
+                personality_aspects={PersonalityAspect.COMMUNICATION_STYLE: 0.8, PersonalityAspect.DECISION_MAKING: 0.7}
             )
             current_snapshot = PersonalitySnapshot(
                 advisor_name="Ambassador Chen Wei", 
                 timestamp=datetime.now(),
-                aspects={"communication_style": 0.6, "decision_making": 0.4}
+                personality_aspects={PersonalityAspect.COMMUNICATION_STYLE: 0.6, PersonalityAspect.DECISION_MAKING: 0.4}
             )
             
             mock_drift = PersonalityDrift(
