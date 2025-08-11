@@ -518,7 +518,7 @@ class VisualizationManager:
                 # This would call render() asynchronously in practice
                 states[component_id] = {
                     'type': component.config.visualization_type.value,
-                    'last_update': component.last_update.isoformat(),
+                    'last_update': component.last_update.isoformat() if component.last_update else None,
                     'is_active': component.is_active,
                     'config': asdict(component.config)
                 }

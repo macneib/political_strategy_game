@@ -434,7 +434,7 @@ class EventTimelineVisualization(VisualizationComponent):
                 'total_events': len(self.events),
                 'visible_events': len(filtered_events),
                 'time_range': self.time_range_filter,
-                'last_update': self.last_update.isoformat()
+                'last_update': self.last_update.isoformat() if self.last_update else None
             }
         }
     

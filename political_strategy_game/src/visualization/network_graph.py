@@ -453,7 +453,7 @@ class AdvisorNetworkVisualization(VisualizationComponent):
                 'visible_nodes': len(filtered_nodes),
                 'total_links': len(self.network_data['links']),
                 'visible_links': len(filtered_links),
-                'last_update': self.last_update.isoformat()
+                'last_update': self.last_update.isoformat() if self.last_update else None
             }
         }
     
