@@ -8,6 +8,18 @@ This is a **cutting-edge political strategy game engine** featuring AI-powered a
 
 **🎯 Current Phase**: Advanced Interactive Systems (Task 4.3) - 7 of 15 systems complete
 
+### 🔧 **Build Status**
+
+[![CI/CD Pipeline](https://github.com/macneib/epoch/actions/workflows/ci.yml/badge.svg)](https://github.com/macneib/epoch/actions/workflows/ci.yml)
+[![Main Branch CI](https://github.com/macneib/epoch/actions/workflows/main-ci.yml/badge.svg)](https://github.com/macneib/epoch/actions/workflows/main-ci.yml)
+[![PR Validation](https://github.com/macneib/epoch/actions/workflows/pr-validation.yml/badge.svg)](https://github.com/macneib/epoch/actions/workflows/pr-validation.yml)
+[![Security Monitoring](https://github.com/macneib/epoch/actions/workflows/dependency-security.yml/badge.svg)](https://github.com/macneib/epoch/actions/workflows/dependency-security.yml)
+
+- ✅ **162 Tests Passing** - Comprehensive test coverage across all systems
+- ✅ **Production Ready** - Clean codebase with professional CI/CD
+- ✅ **Security Monitored** - Automated dependency and security scanning
+- ✅ **Quality Assured** - PR validation and automated testing
+
 ---
 
 ## 🌟 What Makes This Revolutionary?

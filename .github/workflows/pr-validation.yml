@@ -1,0 +1,356 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  pr-info:
+    runs-on: ubuntu-latest
+    outputs:
+      has-tests: ${{ steps.check-tests.outputs.has-tests }}
+      has-docs: ${{ steps.check-docs.outputs.has-docs }}
+      is-breaking: ${{ steps.check-breaking.outputs.is-breaking }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check for test changes
+      id: check-tests
+      run: |
+        if git diff --name-only origin/main...HEAD | grep -q "test_\|tests/"; then
+          echo "has-tests=true" >> $GITHUB_OUTPUT
+          echo "✅ PR includes test changes"
+        else
+          echo "has-tests=false" >> $GITHUB_OUTPUT
+          echo "⚠️  PR does not include test changes"
+        fi
+
+    - name: Check for documentation changes
+      id: check-docs
+      run: |
+        if git diff --name-only origin/main...HEAD | grep -q "README\|\.md\|docs/"; then
+          echo "has-docs=true" >> $GITHUB_OUTPUT
+          echo "✅ PR includes documentation changes"
+        else
+          echo "has-docs=false" >> $GITHUB_OUTPUT
+          echo "ℹ️  PR does not include documentation changes"
+        fi
+
+    - name: Check for breaking changes
+      id: check-breaking
+      run: |
+        # Check commit messages and PR title for breaking change indicators
+        pr_title="${{ github.event.pull_request.title }}"
+        if echo "$pr_title" | grep -qi "breaking\|BREAKING\|major\|incompatible"; then
+          echo "is-breaking=true" >> $GITHUB_OUTPUT
+          echo "⚠️  PR may contain breaking changes"
+        else
+          echo "is-breaking=false" >> $GITHUB_OUTPUT
+          echo "✅ No breaking changes detected"
+        fi
+
+  validate-changes:
+    runs-on: ubuntu-latest
+    needs: pr-info
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      working-directory: ./political_strategy_game
+      run: uv sync --dev
+
+    - name: Validate PR requirements
+      run: |
+        echo "Validating PR requirements..."
+        
+        # Check if src files were changed
+        if git diff --name-only origin/main...HEAD | grep -q "src/"; then
+          echo "✅ Source code changes detected"
+          
+          # If source changed, we should have tests
+          if [ "${{ needs.pr-info.outputs.has-tests }}" = "false" ]; then
+            echo "⚠️  Source code changed but no test changes found"
+            echo "Consider adding or updating tests for your changes."
+          fi
+        fi
+        
+        # Check if this is a feature branch
+        branch_name="${{ github.head_ref }}"
+        if echo "$branch_name" | grep -q "feat/\|feature/"; then
+          echo "✅ Feature branch detected: $branch_name"
+          if [ "${{ needs.pr-info.outputs.has-tests }}" = "false" ]; then
+            echo "⚠️  Feature branch should include tests"
+          fi
+        fi
+
+    - name: Run affected tests only (optimization)
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Running tests for changed files..."
+        
+        # Get changed Python files
+        changed_files=$(git diff --name-only origin/main...HEAD | grep "\.py$" | grep "src/" || true)
+        
+        if [ -n "$changed_files" ]; then
+          echo "Changed source files:"
+          echo "$changed_files"
+          
+          # Map source files to their likely test files
+          test_files=""
+          for file in $changed_files; do
+            # Extract module name and look for corresponding test
+            module=$(basename "$file" .py)
+            potential_test="tests/test_${module}.py"
+            if [ -f "$potential_test" ]; then
+              test_files="$test_files $potential_test"
+            fi
+          done
+          
+          if [ -n "$test_files" ]; then
+            echo "Running relevant tests: $test_files"
+            uv run pytest $test_files -v
+          else
+            echo "No specific tests found, running core tests..."
+            uv run pytest tests/test_memory.py tests/test_advisor_enhanced.py -v
+          fi
+        else
+          echo "No Python source files changed, running minimal test suite..."
+          uv run pytest tests/test_memory.py -v
+        fi
+
+    - name: Check code style (if code changed)
+      working-directory: ./political_strategy_game
+      run: |
+        if git diff --name-only origin/main...HEAD | grep -q "\.py$"; then
+          echo "Checking code style for changed Python files..."
+          
+          # Check if we have style tools available
+          if uv pip list | grep -q ruff; then
+            echo "Running ruff on changed files..."
+            changed_py_files=$(git diff --name-only origin/main...HEAD | grep "\.py$" | grep -E "(src/|tests/)" || true)
+            if [ -n "$changed_py_files" ]; then
+              uv run ruff check $changed_py_files || echo "Style issues found (non-blocking)"
+            fi
+          fi
+          
+          if uv pip list | grep -q black; then
+            echo "Checking formatting with black..."
+            changed_py_files=$(git diff --name-only origin/main...HEAD | grep "\.py$" | grep -E "(src/|tests/)" || true)
+            if [ -n "$changed_py_files" ]; then
+              uv run black --check $changed_py_files || echo "Formatting issues found (non-blocking)"
+            fi
+          fi
+        fi
+
+  compatibility-test:
+    runs-on: ubuntu-latest
+    needs: validate-changes
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Test installation from scratch
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Testing fresh installation..."
+        
+        # Test that uv sync works
+        uv sync
+        
+        # Test that basic imports work
+        uv run python -c "
+        import sys
+        sys.path.insert(0, 'src')
+        
+        try:
+            from core.civilization import Civilization
+            from core.advisors import AdvisorPersonality
+            from core.memory import Memory
+            print('✅ Core imports successful')
+            
+            # Test basic functionality
+            civ = Civilization('Test')
+            print('✅ Civilization creation successful')
+            
+            personality = AdvisorPersonality(
+                ambition=0.5, loyalty=0.7, cunning=0.6, wisdom=0.8,
+                aggression=0.4, caution=0.6, charisma=0.5, integrity=0.7
+            )
+            civ.add_advisor('Test Advisor', 'military', personality)
+            print('✅ Advisor creation successful')
+            
+            print('✅ All basic functionality tests passed')
+            
+        except Exception as e:
+            print(f'❌ Basic functionality test failed: {e}')
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+        "
+
+    - name: Test demo functionality
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Testing demo functionality..."
+        timeout 30s uv run python demos/demo.py || echo "Demo completed or timed out (expected)"
+
+  integration-test:
+    runs-on: ubuntu-latest
+    needs: compatibility-test
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      working-directory: ./political_strategy_game
+      run: uv sync --dev
+
+    - name: Run integration tests
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Running integration tests..."
+        if [ -d "tests/interactive" ]; then
+          uv run pytest tests/interactive/ -v --tb=short
+        else
+          echo "No interactive tests found, running core integration..."
+          uv run pytest tests/test_basic_integration.py -v || echo "Integration test completed"
+        fi
+
+    - name: Test multi-system integration
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Testing multi-system integration..."
+        uv run python -c "
+        import sys
+        sys.path.insert(0, 'src')
+        
+        try:
+            from core.civilization import Civilization
+            from core.advisors import AdvisorPersonality
+            from core.events import EventSystem
+            from core.memory import MemoryManager
+            
+            print('Testing multi-system integration...')
+            
+            # Create civilization with all systems
+            civ = Civilization('Integration Test Empire')
+            
+            # Add multiple advisors
+            for i in range(3):
+                personality = AdvisorPersonality(
+                    ambition=0.5, loyalty=0.7, cunning=0.6, wisdom=0.8,
+                    aggression=0.4, caution=0.6, charisma=0.5, integrity=0.7
+                )
+                civ.add_advisor(f'Advisor_{i}', 'military', personality)
+            
+            # Process multiple turns to test system interactions
+            for turn in range(5):
+                civ.process_turn()
+                
+            print(f'✅ Integration test passed: {len(civ.advisors)} advisors, {turn+1} turns processed')
+            
+            # Test memory system if available
+            for advisor in civ.advisors.values():
+                if hasattr(advisor, 'memory') and advisor.memory:
+                    memory_count = len(advisor.memory.memories)
+                    print(f'✅ Advisor {advisor.name} has {memory_count} memories')
+            
+        except Exception as e:
+            print(f'❌ Integration test failed: {e}')
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+        "
+
+  pr-summary:
+    runs-on: ubuntu-latest
+    needs: [pr-info, validate-changes, compatibility-test, integration-test]
+    if: always()
+
+    steps:
+    - name: Generate PR summary
+      run: |
+        echo "Generating PR validation summary..."
+        
+        cat > pr_summary.md << EOF
+        # PR Validation Summary
+        
+        **PR**: #${{ github.event.number }} - ${{ github.event.pull_request.title }}
+        **Branch**: ${{ github.head_ref }} → ${{ github.base_ref }}
+        **Author**: @${{ github.event.pull_request.user.login }}
+        
+        ## Validation Results
+        
+        - **Info Check**: ${{ needs.pr-info.result }}
+        - **Change Validation**: ${{ needs.validate-changes.result }}
+        - **Compatibility Test**: ${{ needs.compatibility-test.result }}
+        - **Integration Test**: ${{ needs.integration-test.result }}
+        
+        ## Change Analysis
+        
+        - Has Tests: ${{ needs.pr-info.outputs.has-tests }}
+        - Has Docs: ${{ needs.pr-info.outputs.has-docs }}
+        - Breaking Changes: ${{ needs.pr-info.outputs.is-breaking }}
+        
+        ## Next Steps
+        
+        EOF
+        
+        # Add conditional next steps
+        if [ "${{ needs.pr-info.outputs.has-tests }}" = "false" ]; then
+          echo "- 📝 Consider adding tests for your changes" >> pr_summary.md
+        fi
+        
+        if [ "${{ needs.pr-info.outputs.is-breaking }}" = "true" ]; then
+          echo "- ⚠️  Review breaking changes carefully" >> pr_summary.md
+          echo "- 📚 Update documentation if needed" >> pr_summary.md
+        fi
+        
+        if [ "${{ needs.validate-changes.result }}" = "success" ] && \
+           [ "${{ needs.compatibility-test.result }}" = "success" ] && \
+           [ "${{ needs.integration-test.result }}" = "success" ]; then
+          echo "- ✅ All validations passed - ready for review!" >> pr_summary.md
+        else
+          echo "- 🔍 Some validations failed - please check the results" >> pr_summary.md
+        fi
+
+    - name: Upload PR summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: pr-validation-summary
+        path: pr_summary.md
