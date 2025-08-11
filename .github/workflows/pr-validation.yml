@@ -295,7 +295,7 @@ jobs:
             
             # Test civilization processing
             try:
-                summary = civ.get_civilization_summary()
+                summary = civ.get_diplomatic_summary()
                 print(f'✅ Civilization summary generated: {summary[:100]}...')
             except Exception as e:
                 print(f'ℹ️  Summary generation: {e}')

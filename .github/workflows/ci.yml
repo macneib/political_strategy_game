@@ -222,7 +222,7 @@ jobs:
             civ = Civilization(name='Test Empire', leader=leader)
             
             # Test basic civilization functionality
-            summary = civ.get_civilization_summary()
+            summary = civ.get_diplomatic_summary()
             
             elapsed = time.time() - start_time
             print(f'Performance test completed in {elapsed:.2f} seconds')

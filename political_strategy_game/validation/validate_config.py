@@ -33,7 +33,8 @@ def main():
     print("🧪 Testing Political Strategy Game uv configuration...")
     print("=" * 60)
     
-    project_dir = Path(__file__).parent
+    # Project directory is the parent of the validation directory
+    project_dir = Path(__file__).parent.parent
     all_tests_passed = True
     
     # Test 1: Required files exist
@@ -41,7 +42,7 @@ def main():
     required_files = [
         (project_dir / "pyproject.toml", "pyproject.toml"),
         (project_dir / "uv.toml", "uv.toml"),
-        (project_dir / "demo.py", "demo.py"),
+        (project_dir / "demos" / "demo.py", "demos/demo.py"),
         (project_dir / "src" / "__init__.py", "src/__init__.py"),
         (project_dir / "src" / "core" / "__init__.py", "src/core/__init__.py"),
         (project_dir / "src" / "core" / "advisor.py", "src/core/advisor.py"),
@@ -112,7 +113,7 @@ def main():
     
     # Test 5: Demo script structure
     print("\n🐍 Testing demo.py structure...")
-    demo_path = project_dir / "demo.py"
+    demo_path = project_dir / "demos" / "demo.py"
     if demo_path.exists():
         with open(demo_path, 'r') as f:
             demo_content = f.read()
@@ -128,7 +129,7 @@ def main():
         else:
             print("⚠️  No path manipulation found")
             
-        if "from core.advisor import" in demo_content:
+        if "from src.core.advisor import" in demo_content or "from core.advisor import" in demo_content:
             print("✅ Core module imports found")
         else:
             print("❌ Core module imports missing")
