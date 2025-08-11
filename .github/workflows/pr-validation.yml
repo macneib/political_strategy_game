@@ -222,13 +222,6 @@ jobs:
             traceback.print_exc()
             sys.exit(1)
         "
-            
-        except Exception as e:
-            print(f'❌ Basic functionality test failed: {e}')
-            import traceback
-            traceback.print_exc()
-            sys.exit(1)
-        "
 
     - name: Test demo functionality
       working-directory: ./political_strategy_game
