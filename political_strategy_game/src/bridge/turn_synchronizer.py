@@ -251,6 +251,9 @@ class TurnSynchronizer:
                 "ready": ready,
                 "state": self.current_state.to_dict()
             })
+        
+        # Update synchronization status
+        self._update_sync_status()
     
     def set_game_engine_ready(self, ready: bool):
         """Set game engine readiness state."""
@@ -263,6 +266,9 @@ class TurnSynchronizer:
                 "ready": ready,
                 "state": self.current_state.to_dict()
             })
+        
+        # Update synchronization status
+        self._update_sync_status()
     
     def advance_phase(self, force: bool = False) -> bool:
         """

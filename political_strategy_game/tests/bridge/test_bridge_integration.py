@@ -110,8 +110,9 @@ class TestGameEngineBridge:
     async def test_websocket_connection(self):
         """Test WebSocket connection to bridge."""
         bridge = GameEngineBridge(port=8890)
-        bridge.start()
         
+        # Start server in background task
+        server_task = asyncio.create_task(bridge.start_server())
         await asyncio.sleep(0.5)  # Give bridge time to start
         
         try:
@@ -127,6 +128,11 @@ class TestGameEngineBridge:
                 
         finally:
             bridge.stop()
+            server_task.cancel()
+            try:
+                await server_task
+            except asyncio.CancelledError:
+                pass
 
 
 class TestTurnSynchronizer:
@@ -208,10 +214,12 @@ class TestStateSerializer:
         serializer = GameStateSerializer()
         
         # Set initial state
-        serializer.serialize_full_state(sample_game_state)
+        original_state = sample_game_state
+        serializer.serialize_full_state(original_state)
         
-        # Modify state
-        modified_state = sample_game_state
+        # Create a copy and modify it
+        import copy
+        modified_state = copy.deepcopy(original_state)
         modified_state.advisors[0].loyalty = 0.5  # Change loyalty
         modified_state.turn_state.turn_number = 2  # Change turn
         
@@ -223,7 +231,7 @@ class TestStateSerializer:
         assert update.metadata.incremental == True
         
         # Apply update to original state
-        updated_state = serializer.apply_incremental_update(sample_game_state, update)
+        updated_state = serializer.apply_incremental_update(original_state, update)
         assert updated_state.advisors[0].loyalty == 0.5
         assert updated_state.turn_state.turn_number == 2
     
@@ -445,7 +453,7 @@ class TestWebSocketClientSimulation:
         
         try:
             await manager.start()
-            await asyncio.sleep(0.5)  # Give bridge time to start
+            await asyncio.sleep(1.0)  # Give bridge more time to start
             
             # Connect as client
             uri = "ws://localhost:8895"

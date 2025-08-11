@@ -15,8 +15,6 @@ from typing import Dict, List, Optional, Callable, Any
 from datetime import datetime, timedelta
 from queue import Queue, Empty
 import websockets
-from websockets.server import WebSocketServerProtocol
-from websockets.exceptions import ConnectionClosed, WebSocketException
 
 from . import (
     BridgeMessage, MessageType, MessageHeader, EventPriority,
@@ -59,7 +57,7 @@ class GameEngineBridge:
         self.connection_timeout = connection_timeout
         
         # Connection management
-        self.connections: Dict[str, WebSocketServerProtocol] = {}
+        self.connections: Dict[str, Any] = {}
         self.connection_status = ConnectionStatus.DISCONNECTED
         self.last_heartbeat: Dict[str, datetime] = {}
         
@@ -110,8 +108,12 @@ class GameEngineBridge:
         try:
             self.logger.info(f"Starting Game Engine Bridge server on {self.host}:{self.port}")
             
+            # Create a wrapper for the handler that properly handles arguments
+            async def handler(websocket, path=None):
+                return await self._handle_connection(websocket, path or "/")
+            
             async with websockets.serve(
-                self._handle_connection,
+                handler,
                 self.host,
                 self.port,
                 max_size=1024 * 1024,  # 1MB max message size
@@ -133,7 +135,7 @@ class GameEngineBridge:
             self.connection_status = ConnectionStatus.ERROR
             raise
     
-    async def _handle_connection(self, websocket: WebSocketServerProtocol, path: str):
+    async def _handle_connection(self, websocket: Any, path: str):
         """Handle new WebSocket connection."""
         connection_id = f"{websocket.remote_address[0]}:{websocket.remote_address[1]}:{int(time.time())}"
         
@@ -178,10 +180,11 @@ class GameEngineBridge:
                     await self._send_message(websocket, error_msg)
                     self.performance_metrics["errors"] += 1
                     
-        except ConnectionClosed:
-            self.logger.info(f"Connection closed: {connection_id}")
-        except WebSocketException as e:
-            self.logger.error(f"WebSocket error for {connection_id}: {e}")
+        except Exception as e:
+            if "ConnectionClosed" in str(type(e)):
+                self.logger.info(f"Connection closed: {connection_id}")
+            else:
+                self.logger.error(f"WebSocket error for {connection_id}: {e}")
         finally:
             # Clean up connection
             if connection_id in self.connections:
@@ -190,14 +193,15 @@ class GameEngineBridge:
                 del self.last_heartbeat[connection_id]
             self.performance_metrics["connection_count"] = len(self.connections)
     
-    async def _send_message(self, websocket: WebSocketServerProtocol, message: BridgeMessage):
+    async def _send_message(self, websocket: Any, message: BridgeMessage):
         """Send message to specific WebSocket connection."""
         try:
             await websocket.send(message.to_json())
             self.performance_metrics["messages_sent"] += 1
-        except ConnectionClosed:
-            # Connection was closed, remove from active connections
-            connection_id = None
+        except Exception as e:
+            if "ConnectionClosed" in str(type(e)):
+                # Connection was closed, remove from active connections
+                connection_id = None
             for conn_id, ws in self.connections.items():
                 if ws == websocket:
                     connection_id = conn_id
@@ -440,9 +444,15 @@ class GameEngineBridge:
         self.running = False
         self.connection_status = ConnectionStatus.DISCONNECTED
         
-        # Close all connections
-        for websocket in self.connections.values():
-            asyncio.run(websocket.close())
+        # Close all connections (if we're in an event loop, schedule them)
+        try:
+            loop = asyncio.get_running_loop()
+            for websocket in self.connections.values():
+                asyncio.create_task(websocket.close())
+        except RuntimeError:
+            # No event loop running, can use asyncio.run
+            for websocket in self.connections.values():
+                asyncio.run(websocket.close())
         
         self.connections.clear()
         self.last_heartbeat.clear()
