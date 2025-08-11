@@ -35,6 +35,7 @@ jobs:
       run: |
         uv sync --dev
         uv pip install pytest-cov pytest-xdist
+        uv pip install websockets>=11.0.0 psutil>=5.9.0
 
     - name: Verify project structure
       working-directory: ./political_strategy_game
