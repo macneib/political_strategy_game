@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Strategy Game - Visualization Demo</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4fc3f7;
+            margin-bottom: 30px;
+        }
+        
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 80vh;
+        }
+        
+        .viz-panel {
+            background: #16213e;
+            border: 2px solid #4fc3f7;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .viz-title {
+            color: #4fc3f7;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .network-container {
+            grid-column: 1 / 3;
+        }
+        
+        /* Network Graph Styles */
+        .node {
+            stroke: #4fc3f7;
+            stroke-width: 2px;
+            cursor: pointer;
+        }
+        
+        .node.advisor { fill: #ff6b6b; }
+        .node.leader { fill: #4ecdc4; }
+        .node.faction { fill: #45b7d1; }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+        
+        .link.trust { stroke: #4ecdc4; }
+        .link.conflict { stroke: #ff6b6b; }
+        .link.influence { stroke: #feca57; }
+        
+        /* Timeline Styles */
+        .timeline-event {
+            fill: #4fc3f7;
+            stroke: #fff;
+            stroke-width: 1px;
+            cursor: pointer;
+        }
+        
+        .timeline-event.political { fill: #ff6b6b; }
+        .timeline-event.military { fill: #feca57; }
+        .timeline-event.economic { fill: #4ecdc4; }
+        
+        /* Dashboard Styles */
+        .metric-box {
+            background: #0f3460;
+            border: 1px solid #4fc3f7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .alert {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 2px 0;
+            font-size: 12px;
+        }
+        
+        /* Memory Browser Styles */
+        .memory-item {
+            background: #0f3460;
+            border-left: 3px solid #4fc3f7;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        
+        .memory-timestamp {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .demo-note {
+            background: #2d1b69;
+            border: 1px solid #6c5ce7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #a29bfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Political Strategy Game - Visualization Systems Demo</h1>
+        
+        <div class="demo-note">
+            <strong>📋 Demo Status:</strong> This is a frontend mockup showing what the visualizations would look like. 
+            The backend system we built generates JSON data that would power these interactive displays.
+        </div>
+        
+        <div class="visualization-grid">
+            <!-- Advisor Network Visualization -->
+            <div class="viz-panel network-container">
+                <div class="viz-title">🕸️ Advisor Relationship Network</div>
+                <svg id="network-graph" width="100%" height="350"></svg>
+                <div class="demo-note">
+                    Interactive force-directed graph showing advisor relationships, trust levels, and political influence.
+                    Nodes represent advisors, links show relationships (trust/conflict/influence).
+                </div>
+            </div>
+            
+            <!-- Political Timeline -->
+            <div class="viz-panel">
+                <div class="viz-title">📅 Political Event Timeline</div>
+                <svg id="timeline" width="100%" height="200"></svg>
+                <div class="demo-note">
+                    Chronological display of political events with filtering, zoom, and impact visualization.
+                </div>
+            </div>
+            
+            <!-- Political Dashboard -->
+            <div class="viz-panel">
+                <div class="viz-title">📊 Political Status Dashboard</div>
+                <div id="dashboard">
+                    <div class="metric-box">
+                        <div class="metric-value">73%</div>
+                        <div class="metric-label">Coup Probability</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Political Stability</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Active Factions</div>
+                    </div>
+                    <div class="alert">⚠️ High tension detected in Military faction</div>
+                    <div class="alert">🔄 Political realignment in progress</div>
+                </div>
+                <div class="demo-note">
+                    Real-time political metrics with alerts and trend indicators.
+                </div>
+            </div>
+            
+            <!-- Memory Browser -->
+            <div class="viz-panel">
+                <div class="viz-title">🧠 Memory System Browser</div>
+                <div id="memory-browser">
+                    <div class="memory-item">
+                        <strong>Chancellor Vex:</strong> Discussed military budget concerns
+                        <div class="memory-timestamp">2 hours ago</div>
+                    </div>
+                    <div class="memory-item">
+                        <strong>Admiral Rex:</strong> Proposed naval expansion strategy
+                        <div class="memory-timestamp">4 hours ago</div>
+                    </div>
+                    <div class="memory-item">
+                        <strong>Minister Kala:</strong> Warned about economic instability
+                        <div class="memory-timestamp">6 hours ago</div>
+                    </div>
+                    <div class="memory-item">
+                        <strong>General Thane:</strong> Expressed loyalty concerns
+                        <div class="memory-timestamp">8 hours ago</div>
+                    </div>
+                </div>
+                <div class="demo-note">
+                    Browse advisor memories, search historical decisions, explore relationship context.
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-note">
+            <strong>🔧 Implementation Status:</strong><br>
+            ✅ Backend visualization framework complete<br>
+            ✅ Data structures and component management ready<br>
+            ✅ Real-time update system working<br>
+            ✅ JSON output for frontend integration<br>
+            🔄 Frontend UI implementation needed<br>
+            🔄 WebSocket integration for live updates<br>
+            🔄 Game engine bridge connection
+        </div>
+    </div>
+
+    <script>
+        // Demo Network Graph
+        const networkSvg = d3.select("#network-graph");
+        const width = networkSvg.node().getBoundingClientRect().width;
+        const height = 350;
+        
+        // Sample network data
+        const nodes = [
+            {id: "leader", name: "Supreme Leader", type: "leader", x: width/2, y: height/2},
+            {id: "vex", name: "Chancellor Vex", type: "advisor", faction: "loyalist"},
+            {id: "rex", name: "Admiral Rex", type: "advisor", faction: "military"},
+            {id: "kala", name: "Minister Kala", type: "advisor", faction: "economic"},
+            {id: "thane", name: "General Thane", type: "advisor", faction: "military"}
+        ];
+        
+        const links = [
+            {source: "leader", target: "vex", type: "trust", strength: 0.9},
+            {source: "leader", target: "rex", type: "trust", strength: 0.7},
+            {source: "leader", target: "kala", type: "trust", strength: 0.8},
+            {source: "leader", target: "thane", type: "conflict", strength: 0.4},
+            {source: "vex", target: "rex", type: "influence", strength: 0.6},
+            {source: "rex", target: "thane", type: "trust", strength: 0.8},
+            {source: "kala", target: "vex", type: "trust", strength: 0.7}
+        ];
+        
+        // Create force simulation
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(80))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+        
+        // Create links
+        const link = networkSvg.append("g")
+            .selectAll("line")
+            .data(links)
+            .enter().append("line")
+            .attr("class", d => `link ${d.type}`)
+            .attr("stroke-width", d => Math.sqrt(d.strength * 5));
+        
+        // Create nodes
+        const node = networkSvg.append("g")
+            .selectAll("circle")
+            .data(nodes)
+            .enter().append("circle")
+            .attr("class", d => `node ${d.type}`)
+            .attr("r", d => d.type === "leader" ? 20 : 15)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+        
+        // Add labels
+        const labels = networkSvg.append("g")
+            .selectAll("text")
+            .data(nodes)
+            .enter().append("text")
+            .text(d => d.name)
+            .attr("font-size", "12px")
+            .attr("fill", "#eee")
+            .attr("text-anchor", "middle")
+            .attr("dy", 30);
+        
+        // Update positions on simulation tick
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+            
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+            
+            labels
+                .attr("x", d => d.x)
+                .attr("y", d => d.y);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Demo Timeline
+        const timelineSvg = d3.select("#timeline");
+        const timelineWidth = timelineSvg.node().getBoundingClientRect().width;
+        const timelineHeight = 200;
+        
+        const timelineEvents = [
+            {id: 1, name: "Military Budget Debate", type: "political", time: 0.1, severity: 0.6},
+            {id: 2, name: "Admiral Rex Promotion", type: "military", time: 0.3, severity: 0.4},
+            {id: 3, name: "Economic Crisis Warning", type: "economic", time: 0.5, severity: 0.8},
+            {id: 4, name: "Faction Realignment", type: "political", time: 0.7, severity: 0.9},
+            {id: 5, name: "Loyalty Oath Ceremony", type: "political", time: 0.9, severity: 0.3}
+        ];
+        
+        timelineSvg.selectAll("circle")
+            .data(timelineEvents)
+            .enter().append("circle")
+            .attr("class", d => `timeline-event ${d.type}`)
+            .attr("cx", d => d.time * (timelineWidth - 40) + 20)
+            .attr("cy", d => timelineHeight - (d.severity * 100 + 50))
+            .attr("r", d => d.severity * 10 + 5)
+            .on("mouseover", function(event, d) {
+                d3.select(this).attr("r", d.severity * 10 + 8);
+            })
+            .on("mouseout", function(event, d) {
+                d3.select(this).attr("r", d.severity * 10 + 5);
+            });
+        
+        // Timeline axis
+        timelineSvg.append("line")
+            .attr("x1", 20)
+            .attr("y1", timelineHeight - 20)
+            .attr("x2", timelineWidth - 20)
+            .attr("y2", timelineHeight - 20)
+            .attr("stroke", "#4fc3f7")
+            .attr("stroke-width", 2);
+    </script>
+</body>
+</html>
