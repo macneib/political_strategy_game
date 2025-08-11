@@ -197,11 +197,9 @@ jobs:
         timeout 60s uv run python -c "
         import time
         import sys
-        sys.path.insert(0, 'src')
-        
         try:
-            from core.civilization import Civilization
-            from core.advisors import AdvisorPersonality
+            from src.core.civilization import Civilization
+            from src.llm.advisors import AdvisorPersonality
             
             start_time = time.time()
             

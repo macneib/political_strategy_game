@@ -238,8 +238,8 @@ jobs:
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
         
         try:
-            from core.civilization import Civilization
-            from core.advisors import AdvisorPersonality
+            from src.core.civilization import Civilization
+            from src.llm.advisors import AdvisorPersonality
             
             print(f'Initial memory usage: {initial_memory:.2f} MB')
             
