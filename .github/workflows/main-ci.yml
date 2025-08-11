@@ -142,7 +142,7 @@ jobs:
         fi
 
     - name: Archive test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-python-${{ matrix.python-version }}
@@ -195,7 +195,7 @@ jobs:
         uv run pip-audit
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports
@@ -327,7 +327,7 @@ jobs:
         EOF
 
     - name: Upload release summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-summary
         path: release_summary.md

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Strategy Game - Live Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4fc3f7;
+            margin-bottom: 30px;
+        }
+        
+        .status-bar {
+            background: #16213e;
+            border: 1px solid #4fc3f7;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff6b6b;
+        }
+        
+        .status-indicator.connected {
+            background: #4ecdc4;
+        }
+        
+        .update-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #4fc3f7;
+            color: #1a1a2e;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #45a7d1;
+        }
+        
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 75vh;
+        }
+        
+        .viz-panel {
+            background: #16213e;
+            border: 2px solid #4fc3f7;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .viz-title {
+            color: #4fc3f7;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .last-update {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+        
+        .network-container {
+            grid-column: 1 / 3;
+        }
+        
+        /* Network Graph Styles */
+        .node {
+            stroke: #4fc3f7;
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .node.advisor { fill: #ff6b6b; }
+        .node.leader { fill: #4ecdc4; }
+        .node.faction { fill: #45b7d1; }
+        .node.new { stroke: #feca57; stroke-width: 4px; }
+        
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        
+        .link.trust { stroke: #4ecdc4; }
+        .link.conflict { stroke: #ff6b6b; }
+        .link.influence { stroke: #feca57; }
+        .link.new { stroke-opacity: 1; }
+        
+        /* Timeline Styles */
+        .timeline-event {
+            fill: #4fc3f7;
+            stroke: #fff;
+            stroke-width: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-event.political { fill: #ff6b6b; }
+        .timeline-event.military { fill: #feca57; }
+        .timeline-event.economic { fill: #4ecdc4; }
+        .timeline-event.new { stroke: #feca57; stroke-width: 3px; }
+        
+        /* Dashboard Styles */
+        .metric-box {
+            background: #0f3460;
+            border: 1px solid #4fc3f7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-box.updated {
+            border-color: #feca57;
+            box-shadow: 0 0 10px rgba(254, 202, 87, 0.3);
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #ccc;
+        }
+        
+        .alert {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 2px 0;
+            font-size: 12px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        /* Memory Browser Styles */
+        .memory-item {
+            background: #0f3460;
+            border-left: 3px solid #4fc3f7;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .memory-item.new {
+            border-left-color: #feca57;
+            background: #2d1b69;
+        }
+        
+        .memory-timestamp {
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .demo-note {
+            background: #2d1b69;
+            border: 1px solid #6c5ce7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #a29bfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Political Strategy Game - Live Visualization Dashboard</h1>
+        
+        <div class="status-bar">
+            <div class="connection-status">
+                <div class="status-indicator" id="connection-indicator"></div>
+                <span id="connection-text">Connecting to backend...</span>
+            </div>
+            <div class="update-controls">
+                <button class="btn" id="connect-btn" onclick="connectToBackend()">Connect</button>
+                <button class="btn" id="simulate-btn" onclick="simulateEvent()">Simulate Event</button>
+                <button class="btn" id="clear-btn" onclick="clearData()">Clear Data</button>
+            </div>
+        </div>
+        
+        <div class="visualization-grid">
+            <!-- Advisor Network Visualization -->
+            <div class="viz-panel network-container">
+                <div class="viz-title">
+                    🕸️ Advisor Relationship Network
+                    <span class="last-update" id="network-update">Never updated</span>
+                </div>
+                <svg id="network-graph" width="100%" height="300"></svg>
+            </div>
+            
+            <!-- Political Timeline -->
+            <div class="viz-panel">
+                <div class="viz-title">
+                    📅 Political Event Timeline
+                    <span class="last-update" id="timeline-update">Never updated</span>
+                </div>
+                <svg id="timeline" width="100%" height="180"></svg>
+            </div>
+            
+            <!-- Political Dashboard -->
+            <div class="viz-panel">
+                <div class="viz-title">
+                    📊 Political Status Dashboard
+                    <span class="last-update" id="dashboard-update">Never updated</span>
+                </div>
+                <div id="dashboard"></div>
+            </div>
+            
+            <!-- Memory Browser -->
+            <div class="viz-panel">
+                <div class="viz-title">
+                    🧠 Memory System Browser
+                    <span class="last-update" id="memory-update">Never updated</span>
+                </div>
+                <div id="memory-browser"></div>
+            </div>
+        </div>
+        
+        <div class="demo-note">
+            <strong>🔄 Live Updates:</strong> This version can receive real-time updates from the backend system.
+            Use the controls above to connect to the backend or simulate events.
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let websocket = null;
+        let isConnected = false;
+        let networkData = { nodes: [], links: [] };
+        let timelineData = [];
+        let dashboardMetrics = {};
+        let memoryData = [];
+        
+        // Initialize visualizations
+        let networkSvg, timelineSvg, simulation;
+        
+        // Initialize the visualization components
+        function initializeVisualizations() {
+            initializeNetwork();
+            initializeTimeline();
+            initializeDashboard();
+            initializeMemoryBrowser();
+        }
+        
+        // Network Graph Initialization
+        function initializeNetwork() {
+            networkSvg = d3.select("#network-graph");
+            const width = networkSvg.node().getBoundingClientRect().width;
+            const height = 300;
+            
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(80))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+        }
+        
+        // Timeline Initialization
+        function initializeTimeline() {
+            timelineSvg = d3.select("#timeline");
+        }
+        
+        // Dashboard Initialization
+        function initializeDashboard() {
+            const dashboard = d3.select("#dashboard");
+            // Initialize with default metrics
+            updateDashboard({
+                coup_probability: 0.15,
+                political_stability: 0.85,
+                active_factions: 8,
+                alerts: []
+            });
+        }
+        
+        // Memory Browser Initialization
+        function initializeMemoryBrowser() {
+            const memoryBrowser = d3.select("#memory-browser");
+            // Initialize with sample data
+            updateMemoryBrowser([
+                {
+                    id: 1,
+                    advisor: "System",
+                    content: "Visualization system initialized",
+                    timestamp: new Date()
+                }
+            ]);
+        }
+        
+        // WebSocket Connection (fallback to HTTP polling)
+        function connectToBackend() {
+            const connectBtn = document.getElementById('connect-btn');
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            
+            // Try HTTP polling to backend data
+            tryHttpConnection();
+        }
+        
+        function tryHttpConnection() {
+            // Try to fetch data from our Python backend
+            fetch('http://localhost:8000/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'running') {
+                        startHttpPolling();
+                    } else {
+                        simulateConnection();
+                    }
+                })
+                .catch(error => {
+                    console.log('Backend not available, using simulation mode');
+                    simulateConnection();
+                });
+        }
+        
+        function startHttpPolling() {
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            isConnected = true;
+            indicator.classList.add('connected');
+            statusText.textContent = 'Connected to Backend';
+            connectBtn.textContent = 'Disconnect';
+            connectBtn.onclick = disconnect;
+            
+            // Start polling for updates
+            pollBackendData();
+            setInterval(pollBackendData, 2000); // Poll every 2 seconds
+        }
+        
+        async function pollBackendData() {
+            try {
+                // Fetch data from all endpoints
+                const [networkResp, timelineResp, dashboardResp, memoryResp] = await Promise.all([
+                    fetch('http://localhost:8000/api/network'),
+                    fetch('http://localhost:8000/api/timeline'),
+                    fetch('http://localhost:8000/api/dashboard'),
+                    fetch('http://localhost:8000/api/memory')
+                ]);
+                
+                const networkData = await networkResp.json();
+                const timelineData = await timelineResp.json();
+                const dashboardData = await dashboardResp.json();
+                const memoryData = await memoryResp.json();
+                
+                // Update visualizations with real data
+                if (networkData && networkData.nodes) {
+                    updateNetwork(networkData);
+                }
+                if (timelineData && timelineData.events) {
+                    updateTimeline(timelineData.events);
+                }
+                if (dashboardData) {
+                    updateDashboard(dashboardData);
+                }
+                if (memoryData && memoryData.memories) {
+                    updateMemoryBrowser(memoryData.memories);
+                }
+                
+            } catch (error) {
+                console.log('Error polling backend:', error);
+                // Fallback to simulation if backend is unavailable
+                if (isConnected) {
+                    simulateRandomUpdate();
+                }
+            }
+        }
+        
+        function simulateConnection() {
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            isConnected = true;
+            indicator.classList.add('connected');
+            statusText.textContent = 'Connected (Simulation Mode)';
+            connectBtn.textContent = 'Disconnect';
+            connectBtn.onclick = disconnect;
+            
+            // Start receiving simulated updates
+            startSimulatedUpdates();
+        }
+        
+        function disconnect() {
+            const indicator = document.getElementById('connection-indicator');
+            const statusText = document.getElementById('connection-text');
+            const connectBtn = document.getElementById('connect-btn');
+            
+            isConnected = false;
+            indicator.classList.remove('connected');
+            statusText.textContent = 'Disconnected';
+            connectBtn.textContent = 'Connect';
+            connectBtn.onclick = connectToBackend;
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+        }
+        
+        // Update functions for each visualization component
+        function updateNetwork(data) {
+            if (!data || !data.nodes) return;
+            
+            networkData = data;
+            const width = networkSvg.node().getBoundingClientRect().width;
+            const height = 300;
+            
+            // Clear existing elements
+            networkSvg.selectAll("*").remove();
+            
+            // Create links
+            const link = networkSvg.append("g")
+                .selectAll("line")
+                .data(data.links)
+                .enter().append("line")
+                .attr("class", d => `link ${d.type} ${d.isNew ? 'new' : ''}`)
+                .attr("stroke-width", d => Math.sqrt(d.strength * 5));
+            
+            // Create nodes
+            const node = networkSvg.append("g")
+                .selectAll("circle")
+                .data(data.nodes)
+                .enter().append("circle")
+                .attr("class", d => `node ${d.type} ${d.isNew ? 'new' : ''}`)
+                .attr("r", d => d.type === "leader" ? 20 : 15)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+            
+            // Add labels
+            const labels = networkSvg.append("g")
+                .selectAll("text")
+                .data(data.nodes)
+                .enter().append("text")
+                .text(d => d.name)
+                .attr("font-size", "12px")
+                .attr("fill", "#eee")
+                .attr("text-anchor", "middle")
+                .attr("dy", 30);
+            
+            // Update simulation
+            simulation.nodes(data.nodes);
+            simulation.force("link").links(data.links);
+            simulation.restart();
+            
+            // Update positions on tick
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+                
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+                
+                labels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+            
+            document.getElementById('network-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function updateTimeline(events) {
+            if (!events) return;
+            
+            timelineData = events;
+            const width = timelineSvg.node().getBoundingClientRect().width;
+            const height = 180;
+            
+            // Clear existing
+            timelineSvg.selectAll("*").remove();
+            
+            // Add timeline axis
+            timelineSvg.append("line")
+                .attr("x1", 20)
+                .attr("y1", height - 20)
+                .attr("x2", width - 20)
+                .attr("y2", height - 20)
+                .attr("stroke", "#4fc3f7")
+                .attr("stroke-width", 2);
+            
+            // Add events
+            timelineSvg.selectAll("circle")
+                .data(events)
+                .enter().append("circle")
+                .attr("class", d => `timeline-event ${d.type} ${d.isNew ? 'new' : ''}`)
+                .attr("cx", d => d.time * (width - 40) + 20)
+                .attr("cy", d => height - (d.severity * 80 + 40))
+                .attr("r", d => d.severity * 8 + 4)
+                .on("mouseover", function(event, d) {
+                    d3.select(this).attr("r", d.severity * 8 + 7);
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).attr("r", d.severity * 8 + 4);
+                });
+            
+            document.getElementById('timeline-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function updateDashboard(metrics) {
+            if (!metrics) return;
+            
+            dashboardMetrics = metrics;
+            const dashboard = d3.select("#dashboard");
+            
+            // Clear existing
+            dashboard.selectAll("*").remove();
+            
+            // Add metrics
+            const metricBoxes = [
+                { key: 'coup_probability', label: 'Coup Probability', format: d => Math.round(d * 100) + '%' },
+                { key: 'political_stability', label: 'Political Stability', format: d => Math.round(d * 100) + '%' },
+                { key: 'active_factions', label: 'Active Factions', format: d => d.toString() }
+            ];
+            
+            metricBoxes.forEach(metric => {
+                const box = dashboard.append("div")
+                    .attr("class", "metric-box")
+                    .classed("updated", metrics[metric.key] !== undefined);
+                
+                box.append("div")
+                    .attr("class", "metric-value")
+                    .text(metric.format(metrics[metric.key] || 0));
+                
+                box.append("div")
+                    .attr("class", "metric-label")
+                    .text(metric.label);
+            });
+            
+            // Add alerts
+            if (metrics.alerts) {
+                metrics.alerts.forEach(alert => {
+                    dashboard.append("div")
+                        .attr("class", "alert")
+                        .text(alert);
+                });
+            }
+            
+            document.getElementById('dashboard-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function updateMemoryBrowser(memories) {
+            if (!memories) return;
+            
+            memoryData = memories;
+            const memoryBrowser = d3.select("#memory-browser");
+            
+            // Clear existing
+            memoryBrowser.selectAll("*").remove();
+            
+            // Add memory items
+            memories.slice(-10).forEach(memory => {
+                const item = memoryBrowser.append("div")
+                    .attr("class", "memory-item")
+                    .classed("new", memory.isNew);
+                
+                item.append("strong")
+                    .text(memory.advisor + ": ");
+                
+                item.append("span")
+                    .text(memory.content);
+                
+                item.append("div")
+                    .attr("class", "memory-timestamp")
+                    .text(formatTimeAgo(memory.timestamp));
+            });
+            
+            document.getElementById('memory-update').textContent = new Date().toLocaleTimeString();
+        }
+        
+        // Utility functions
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = Math.abs(now - new Date(timestamp)) / 1000;
+            
+            if (diff < 60) return `${Math.floor(diff)} seconds ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+            return `${Math.floor(diff / 86400)} days ago`;
+        }
+        
+        // Drag functions for network
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Simulation functions
+        function startSimulatedUpdates() {
+            // Simulate periodic updates
+            setInterval(() => {
+                if (isConnected) {
+                    simulateRandomUpdate();
+                }
+            }, 3000); // Update every 3 seconds
+        }
+        
+        function simulateRandomUpdate() {
+            const updateType = Math.random();
+            
+            if (updateType < 0.25) {
+                simulateNetworkUpdate();
+            } else if (updateType < 0.5) {
+                simulateTimelineUpdate();
+            } else if (updateType < 0.75) {
+                simulateDashboardUpdate();
+            } else {
+                simulateMemoryUpdate();
+            }
+        }
+        
+        function simulateNetworkUpdate() {
+            const advisors = ['Chancellor Vex', 'Admiral Rex', 'Minister Kala', 'General Thane', 'Diplomat Zara'];
+            const newAdvisor = advisors[Math.floor(Math.random() * advisors.length)];
+            
+            const nodes = [
+                {id: "leader", name: "Supreme Leader", type: "leader"},
+                {id: "vex", name: "Chancellor Vex", type: "advisor"},
+                {id: "rex", name: "Admiral Rex", type: "advisor"},
+                {id: "kala", name: "Minister Kala", type: "advisor"},
+                {id: "thane", name: "General Thane", type: "advisor", isNew: true}
+            ];
+            
+            const links = [
+                {source: "leader", target: "vex", type: "trust", strength: Math.random()},
+                {source: "leader", target: "rex", type: "trust", strength: Math.random()},
+                {source: "leader", target: "kala", type: "trust", strength: Math.random()},
+                {source: "leader", target: "thane", type: "conflict", strength: Math.random(), isNew: true}
+            ];
+            
+            updateNetwork({ nodes, links });
+        }
+        
+        function simulateTimelineUpdate() {
+            const eventTypes = ['political', 'military', 'economic'];
+            const eventNames = ['Budget Meeting', 'Strategic Review', 'Policy Change', 'Faction Meeting'];
+            
+            const newEvent = {
+                id: Date.now(),
+                name: eventNames[Math.floor(Math.random() * eventNames.length)],
+                type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
+                time: Math.random(),
+                severity: Math.random(),
+                isNew: true
+            };
+            
+            timelineData.push(newEvent);
+            updateTimeline(timelineData.slice(-10)); // Keep last 10 events
+        }
+        
+        function simulateDashboardUpdate() {
+            const metrics = {
+                coup_probability: Math.random() * 0.8,
+                political_stability: 0.3 + Math.random() * 0.7,
+                active_factions: Math.floor(Math.random() * 15) + 5,
+                alerts: []
+            };
+            
+            if (metrics.coup_probability > 0.6) {
+                metrics.alerts.push("⚠️ High coup risk detected");
+            }
+            if (metrics.political_stability < 0.4) {
+                metrics.alerts.push("🔄 Political instability rising");
+            }
+            
+            updateDashboard(metrics);
+        }
+        
+        function simulateMemoryUpdate() {
+            const advisors = ['Chancellor Vex', 'Admiral Rex', 'Minister Kala', 'General Thane'];
+            const actions = ['proposed new policy', 'expressed concerns', 'suggested alliance', 'warned about threats'];
+            
+            const newMemory = {
+                id: Date.now(),
+                advisor: advisors[Math.floor(Math.random() * advisors.length)],
+                content: actions[Math.floor(Math.random() * actions.length)],
+                timestamp: new Date(),
+                isNew: true
+            };
+            
+            memoryData.push(newMemory);
+            updateMemoryBrowser(memoryData);
+        }
+        
+        // Manual simulation controls
+        function simulateEvent() {
+            simulateRandomUpdate();
+        }
+        
+        function clearData() {
+            networkData = { nodes: [], links: [] };
+            timelineData = [];
+            dashboardMetrics = {};
+            memoryData = [];
+            
+            updateNetwork(networkData);
+            updateTimeline(timelineData);
+            updateDashboard({ coup_probability: 0, political_stability: 1, active_factions: 0, alerts: [] });
+            updateMemoryBrowser([]);
+        }
+        
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeVisualizations();
+        });
+    </script>
+</body>
+</html>
