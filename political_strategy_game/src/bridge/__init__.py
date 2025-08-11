@@ -13,13 +13,12 @@ from datetime import datetime
 import json
 import uuid
 
-# Import all components for easy access
-from .game_engine_bridge import GameEngineBridge
-from .turn_synchronizer import TurnSynchronizer, TurnPhase, SyncStatus
-from .state_serializer import GameStateSerializer, IncrementalUpdate
-from .event_broadcaster import PoliticalEventBroadcaster, SubscriptionFilter, EventCategory
-from .performance_profiler import PerformanceProfiler
-from .bridge_manager import GameEngineBridgeManager
+# Components available for import - but not importing them here to avoid circular imports
+__all__ = [
+    'MessageType', 'MessageHeader', 'BridgeMessage', 'MessageFactory',
+    'ErrorCode', 'GameEngineStatus', 'ConnectionInfo', 'GameStateData',
+    'PoliticalEventData', 'PerformanceMetrics'
+]
 
 
 class MessageType(Enum):

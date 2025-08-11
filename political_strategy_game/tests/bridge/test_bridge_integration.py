@@ -12,9 +12,10 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any
 
 from src.bridge import (
-    GameState, CivilizationState, AdvisorState, TurnState, PoliticalEvent,
-    MessageType, EventPriority, SubscriptionFilter, EventCategory
+    MessageType, GameState, CivilizationState, AdvisorState, 
+    TurnState, PoliticalEvent, EventPriority
 )
+from src.bridge.event_broadcaster import SubscriptionFilter, EventCategory
 from src.bridge.bridge_manager import GameEngineBridgeManager
 from src.bridge.game_engine_bridge import GameEngineBridge
 from src.bridge.turn_synchronizer import TurnSynchronizer
