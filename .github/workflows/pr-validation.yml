@@ -222,6 +222,13 @@ jobs:
             traceback.print_exc()
             sys.exit(1)
         "
+            
+        except Exception as e:
+            print(f'❌ Basic functionality test failed: {e}')
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+        "
 
     - name: Test demo functionality
       working-directory: ./political_strategy_game
@@ -295,7 +302,7 @@ jobs:
             
             # Test civilization processing
             try:
-                summary = civ.get_civilization_summary()
+                summary = civ.get_diplomatic_summary()
                 print(f'✅ Civilization summary generated: {summary[:100]}...')
             except Exception as e:
                 print(f'ℹ️  Summary generation: {e}')

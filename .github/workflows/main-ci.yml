@@ -100,7 +100,7 @@ jobs:
             # Benchmark 2: Summary generation
             start = time.time()
             for civ in civs:
-                summary = civ.get_civilization_summary()
+                summary = civ.get_diplomatic_summary()
             
             processing_time = time.time() - start
             print(f'Generated 10 civilization summaries: {processing_time:.3f}s')
