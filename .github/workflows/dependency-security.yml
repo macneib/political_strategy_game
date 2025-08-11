@@ -1,0 +1,344 @@
+name: Dependency & Security Monitoring
+
+on:
+  schedule:
+    # Run weekly on Sundays at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Check for dependency updates
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Checking for dependency updates..."
+        
+        # Install current dependencies
+        uv sync --dev
+        
+        # Check for outdated packages
+        echo "Current dependencies:"
+        uv pip list
+        
+        echo "Checking for security vulnerabilities..."
+        uv pip install safety pip-audit
+        
+        # Run security checks
+        uv run safety check --json --output safety_report.json || true
+        uv run pip-audit --format=json --output=pip_audit_report.json || true
+        
+        # Display results
+        echo "Safety check results:"
+        uv run safety check || echo "Safety check completed with findings"
+        
+        echo "Pip-audit results:"
+        uv run pip-audit || echo "Pip-audit completed with findings"
+
+    - name: Check Python version compatibility
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Checking Python version compatibility..."
+        
+        # Check if pyproject.toml specifies Python version requirements
+        if [ -f "pyproject.toml" ]; then
+          echo "Python requirements in pyproject.toml:"
+          grep -A 5 "requires-python" pyproject.toml || echo "No Python version requirement found"
+        fi
+        
+        # Test with different Python versions if possible
+        echo "Current Python version: $(python --version)"
+
+    - name: Generate dependency report
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Generating dependency report..."
+        
+        cat > dependency_report.md << EOF
+        # Dependency Status Report
+        
+        **Generated**: $(date)
+        **Python Version**: $(python --version)
+        
+        ## Current Dependencies
+        \`\`\`
+        $(uv pip list)
+        \`\`\`
+        
+        ## Security Status
+        
+        ### Safety Check
+        \`\`\`
+        $(uv run safety check 2>&1 || echo "Safety check completed")
+        \`\`\`
+        
+        ### Pip-Audit Check
+        \`\`\`
+        $(uv run pip-audit 2>&1 || echo "Pip-audit completed")
+        \`\`\`
+        
+        ## Recommendations
+        
+        EOF
+        
+        # Add recommendations based on findings
+        if [ -f "safety_report.json" ]; then
+          safety_issues=$(cat safety_report.json | grep -o '"vulnerabilities":' | wc -l || echo "0")
+          if [ "$safety_issues" -gt 0 ]; then
+            echo "- 🔴 Security vulnerabilities found - review safety_report.json" >> dependency_report.md
+          else
+            echo "- ✅ No known security vulnerabilities" >> dependency_report.md
+          fi
+        fi
+        
+        if [ -f "pip_audit_report.json" ]; then
+          audit_issues=$(cat pip_audit_report.json | grep -o '"vulnerabilities":' | wc -l || echo "0")
+          if [ "$audit_issues" -gt 0 ]; then
+            echo "- 🔴 Dependency vulnerabilities found - review pip_audit_report.json" >> dependency_report.md
+          else
+            echo "- ✅ No dependency vulnerabilities found" >> dependency_report.md
+          fi
+        fi
+
+    - name: Upload dependency reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-reports
+        path: |
+          political_strategy_game/dependency_report.md
+          political_strategy_game/safety_report.json
+          political_strategy_game/pip_audit_report.json
+
+    - name: Create issue for security findings
+      if: hashFiles('political_strategy_game/safety_report.json') != '' || hashFiles('political_strategy_game/pip_audit_report.json') != ''
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let securityIssues = [];
+          
+          // Check safety report
+          try {
+            const safetyReport = JSON.parse(fs.readFileSync('political_strategy_game/safety_report.json', 'utf8'));
+            if (safetyReport.vulnerabilities && safetyReport.vulnerabilities.length > 0) {
+              securityIssues.push(`**Safety Check**: ${safetyReport.vulnerabilities.length} vulnerabilities found`);
+            }
+          } catch (e) {
+            console.log('No safety report or parsing error');
+          }
+          
+          // Check pip-audit report
+          try {
+            const auditReport = JSON.parse(fs.readFileSync('political_strategy_game/pip_audit_report.json', 'utf8'));
+            if (auditReport.vulnerabilities && auditReport.vulnerabilities.length > 0) {
+              securityIssues.push(`**Pip-Audit**: ${auditReport.vulnerabilities.length} vulnerabilities found`);
+            }
+          } catch (e) {
+            console.log('No audit report or parsing error');
+          }
+          
+          if (securityIssues.length > 0) {
+            const issueBody = `
+            # 🔒 Security Vulnerabilities Detected
+            
+            Our automated security scan has detected potential vulnerabilities in the project dependencies.
+            
+            ## Findings
+            
+            ${securityIssues.map(issue => `- ${issue}`).join('\n')}
+            
+            ## Action Required
+            
+            1. Review the detailed reports in the [workflow artifacts](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            2. Update affected dependencies
+            3. Test the application after updates
+            4. Close this issue once resolved
+            
+            ## Reports
+            
+            - Download the full reports from the workflow artifacts
+            - Check \`safety_report.json\` and \`pip_audit_report.json\` for details
+            
+            **Auto-generated by dependency monitoring workflow**
+            `;
+            
+            // Check if a similar issue already exists
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['security', 'dependencies']
+            });
+            
+            const hasOpenSecurityIssue = existingIssues.data.some(issue => 
+              issue.title.includes('Security Vulnerabilities Detected')
+            );
+            
+            if (!hasOpenSecurityIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔒 Security Vulnerabilities Detected in Dependencies',
+                body: issueBody,
+                labels: ['security', 'dependencies', 'automated']
+              });
+            }
+          }
+
+  performance-monitoring:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      working-directory: ./political_strategy_game
+      run: |
+        uv sync --dev
+        uv pip install memory-profiler line-profiler
+
+    - name: Run performance monitoring
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Running performance monitoring..."
+        
+        uv run python -c "
+        import time
+        import psutil
+        import sys
+        sys.path.insert(0, 'src')
+        
+        print('=== Performance Monitoring ===')
+        
+        # Monitor memory usage
+        process = psutil.Process()
+        initial_memory = process.memory_info().rss / 1024 / 1024  # MB
+        
+        try:
+            from src.core.civilization import Civilization
+            from src.core.leader import Leader, LeadershipStyle
+            from src.core.advisor import PersonalityProfile
+            from src.llm.advisors import AdvisorPersonality
+            
+            print(f'Initial memory usage: {initial_memory:.2f} MB')
+            
+            # Create multiple civilizations and measure performance
+            civs = []
+            start_time = time.time()
+            
+            for i in range(10):
+                personality = PersonalityProfile(
+                    ambition=0.7, loyalty=0.8, cunning=0.5, wisdom=0.6,
+                    aggression=0.4, caution=0.7, charisma=0.8, integrity=0.9
+                )
+                
+                leader = Leader(
+                    name=f'Leader_{i}',
+                    civilization_id=f'empire_{i}',
+                    personality=personality,
+                    leadership_style=LeadershipStyle.COLLABORATIVE
+                )
+                
+                civ = Civilization(name=f'Empire_{i}', leader=leader)
+                civs.append(civ)
+                
+                # Check memory every few civilizations
+                if i % 3 == 0:
+                    current_memory = process.memory_info().rss / 1024 / 1024
+                    print(f'Memory after {i+1} civilizations: {current_memory:.2f} MB (+{current_memory-initial_memory:.2f} MB)')
+            
+            creation_time = time.time() - start_time
+            final_memory = process.memory_info().rss / 1024 / 1024
+            
+            print(f'Civilization creation time: {creation_time:.3f}s')
+            print(f'Final memory usage: {final_memory:.2f} MB')
+            print(f'Memory increase: {final_memory-initial_memory:.2f} MB')
+            
+            # Process turns and measure performance
+            start_time = time.time()
+            for civ in civs:
+                for turn in range(3):
+                    civ.process_turn()
+            
+            processing_time = time.time() - start_time
+            processing_memory = process.memory_info().rss / 1024 / 1024
+            
+            print(f'Turn processing time: {processing_time:.3f}s')
+            print(f'Memory after processing: {processing_memory:.2f} MB')
+            
+            # Performance thresholds
+            if creation_time > 10:
+                print('⚠️  WARNING: Civilization creation is slow')
+            
+            if processing_time > 15:
+                print('⚠️  WARNING: Turn processing is slow')
+            
+            if final_memory > 500:  # 500 MB threshold
+                print('⚠️  WARNING: High memory usage detected')
+            
+            print('✅ Performance monitoring completed')
+            
+        except Exception as e:
+            print(f'❌ Performance monitoring failed: {e}')
+            import traceback
+            traceback.print_exc()
+        "
+
+    - name: Generate performance report
+      working-directory: ./political_strategy_game
+      run: |
+        echo "Generating performance report..."
+        
+        cat > performance_report.md << EOF
+        # Performance Monitoring Report
+        
+        **Generated**: $(date)
+        **System**: Ubuntu Latest (GitHub Actions)
+        **Python**: $(python --version)
+        
+        ## Performance Metrics
+        
+        See the detailed output above for:
+        - Memory usage patterns
+        - Civilization creation performance
+        - Turn processing performance
+        
+        ## Recommendations
+        
+        - Monitor memory usage trends over time
+        - Optimize performance bottlenecks if thresholds are exceeded
+        - Consider implementing memory pooling for large simulations
+        
+        ## Historical Comparison
+        
+        This report can be compared with previous runs to identify performance regressions.
+        EOF
+
+    - name: Upload performance report
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-report
+        path: political_strategy_game/performance_report.md

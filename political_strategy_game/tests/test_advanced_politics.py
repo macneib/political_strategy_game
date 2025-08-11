@@ -208,6 +208,7 @@ class TestAdvancedPoliticalManager:
         conspiracy.add_member("advisor_2")
         conspiracy.add_member("advisor_3")
         conspiracy.network_strength = 0.6  # High enough for activation
+        conspiracy.discovery_risk = 0.0  # Prevent random detection
         
         results = manager.process_turn()
         
