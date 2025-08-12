@@ -99,16 +99,14 @@ class MemoryFactory:
     def create_memory(cls, advisor_id: str, event_type: MemoryType, 
                      current_turn: int, **kwargs) -> Memory:
         """Create a single realistic memory."""
-        template = random.choice(cls.MEMORY_TEMPLATES[event_type])
-        
-        # Fill in template variables
+        template = random.choice(cls.MEMORY_TEMPLATES[event_type])  # nosec B311 - Using random for game mechanics, not security
         content = cls._fill_template(template, **kwargs)
         
         # Generate realistic memory attributes
         emotional_impact = cls._generate_emotional_impact(event_type)
-        reliability = random.uniform(0.7, 1.0)  # Start with good reliability
+        reliability = random.uniform(0.7, 1.0)  # nosec B311 - Using random for game mechanics, not security
         decay_rate = cls._generate_decay_rate(event_type)
-        created_turn = current_turn - random.randint(0, 20)  # Memory from recent past
+        created_turn = current_turn - random.randint(0, 20)  # nosec B311 - Using random for game mechanics, not security
         tags = cls._generate_tags(event_type, content)
         
         return Memory(
@@ -193,9 +191,9 @@ class MemoryFactory:
             memory_bank.advisor_memories[advisor_id] = advisor_memory
         
         # Add some shared memories that all advisors know
-        shared_memory_count = random.randint(5, 15)
+        shared_memory_count = random.randint(5, 15)  # nosec B311 - Using random for game mechanics, not security
         for _ in range(shared_memory_count):
-            event_type = random.choice(list(MemoryType))
+            event_type = random.choice(list(MemoryType))  # nosec B311 - Using random for game mechanics, not security
             shared_memory = cls.create_memory("shared", event_type, current_turn)
             memory_bank.add_shared_memory(shared_memory)
         
@@ -205,26 +203,26 @@ class MemoryFactory:
     def _fill_template(cls, template: str, **kwargs) -> str:
         """Fill memory template with appropriate values."""
         replacements = {
-            "subject": random.choice(cls.SUBJECTS),
-            "crisis_type": random.choice(cls.CRISIS_TYPES),
-            "advisor_name": random.choice(cls.ADVISOR_NAMES),
-            "advisor_name2": random.choice(cls.ADVISOR_NAMES),
-            "vote_result": random.choice(["favorably", "unfavorably", "with conditions"]),
-            "action": random.choice(["caution", "aggressive action", "diplomacy", "investigation"]),
-            "alternative": random.choice(["military action", "diplomatic solution", "economic measures"]),
-            "response_type": random.choice(["swift", "cautious", "decisive", "controversial"]),
-            "revelation": random.choice(["corruption", "foreign influence", "internal treachery"]),
-            "conspiracy_subject": random.choice(["regime change", "policy manipulation", "foreign deals"]),
-            "target": random.choice(["the leader", "our faction", "rival advisors"]),
-            "faction": random.choice(["military", "religious", "merchant", "noble"]),
-            "role": random.choice(["military", "economic", "diplomatic", "intelligence"]),
-            "activity": random.choice(["collaboration", "crisis management", "mutual support"]),
-            "situation": random.choice(["council vote", "crisis response", "policy debate"]),
-            "event": random.choice(["misunderstanding", "external pressure", "mutual compromise"]),
-            "information": random.choice(["enemy troop movements", "trade route changes", "political shifts"]),
-            "source": random.choice(["spy network", "diplomatic contacts", "merchant reports"]),
-            "intelligence": random.choice(["invasion preparations", "internal unrest", "economic troubles"]),
-            "threat": random.choice(["invasion", "coup", "economic crisis", "natural disaster"]),
+            "subject": random.choice(cls.SUBJECTS),  # nosec B311 - Using random for game mechanics, not security
+            "crisis_type": random.choice(cls.CRISIS_TYPES),  # nosec B311 - Using random for game mechanics, not security
+            "advisor_name": random.choice(cls.ADVISOR_NAMES),  # nosec B311 - Using random for game mechanics, not security
+            "advisor_name2": random.choice(cls.ADVISOR_NAMES),  # nosec B311 - Using random for game mechanics, not security
+            "vote_result": random.choice(["favorably", "unfavorably", "with conditions"]),  # nosec B311 - Using random for game mechanics, not security
+            "action": random.choice(["caution", "aggressive action", "diplomacy", "investigation"]),  # nosec B311 - Using random for game mechanics, not security
+            "alternative": random.choice(["military action", "diplomatic solution", "economic measures"]),  # nosec B311 - Using random for game mechanics, not security
+            "response_type": random.choice(["swift", "cautious", "decisive", "controversial"]),  # nosec B311 - Using random for game mechanics, not security
+            "revelation": random.choice(["corruption", "foreign influence", "internal treachery"]),  # nosec B311 - Using random for game mechanics, not security
+            "conspiracy_subject": random.choice(["regime change", "policy manipulation", "foreign deals"]),  # nosec B311 - Using random for game mechanics, not security
+            "target": random.choice(["the leader", "our faction", "rival advisors"]),  # nosec B311 - Using random for game mechanics, not security
+            "faction": random.choice(["military", "religious", "merchant", "noble"]),  # nosec B311 - Using random for game mechanics, not security
+            "role": random.choice(["military", "economic", "diplomatic", "intelligence"]),  # nosec B311 - Using random for game mechanics, not security
+            "activity": random.choice(["collaboration", "crisis management", "mutual support"]),  # nosec B311 - Using random for game mechanics, not security
+            "situation": random.choice(["council vote", "crisis response", "policy debate"]),  # nosec B311 - Using random for game mechanics, not security
+            "event": random.choice(["misunderstanding", "external pressure", "mutual compromise"]),  # nosec B311 - Using random for game mechanics, not security
+            "information": random.choice(["enemy troop movements", "trade route changes", "political shifts"]),  # nosec B311 - Using random for game mechanics, not security
+            "source": random.choice(["spy network", "diplomatic contacts", "merchant reports"]),  # nosec B311 - Using random for game mechanics, not security
+            "intelligence": random.choice(["invasion preparations", "internal unrest", "economic troubles"]),  # nosec B311 - Using random for game mechanics, not security
+            "threat": random.choice(["invasion", "coup", "economic crisis", "natural disaster"]),  # nosec B311 - Using random for game mechanics, not security
         }
         
         # Add any additional kwargs
@@ -250,7 +248,7 @@ class MemoryFactory:
         }
         
         min_impact, max_impact = impact_ranges.get(event_type, (0.3, 0.7))
-        return random.uniform(min_impact, max_impact)
+        return random.uniform(min_impact, max_impact)  # nosec B311 - Using random for game mechanics, not security
     
     @classmethod
     def _generate_decay_rate(cls, event_type: MemoryType) -> float:
@@ -267,7 +265,7 @@ class MemoryFactory:
         }
         
         min_decay, max_decay = decay_ranges.get(event_type, (0.015, 0.025))
-        return random.uniform(min_decay, max_decay)
+        return random.uniform(min_decay, max_decay)  # nosec B311 - Using random for game mechanics, not security
     
     @classmethod
     def _generate_tags(cls, event_type: MemoryType, content: str) -> Set[str]:
@@ -294,7 +292,7 @@ class MemoryFactory:
     def _weighted_choice(cls, weights: dict) -> MemoryType:
         """Choose a memory type based on weighted probabilities."""
         total = sum(weights.values())
-        r = random.uniform(0, total)
+        r = random.uniform(0, total)  # nosec B311 - Using random for game mechanics, not security
         
         cumulative = 0
         for choice, weight in weights.items():

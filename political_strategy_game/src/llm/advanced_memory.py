@@ -263,7 +263,7 @@ class AdvancedMemoryManager:
                                  max_context_tokens: int = 1500) -> ContextPackage:
         """Get enhanced context for LLM query."""
         # Check cache first
-        cache_key = hashlib.md5(f"{query}_{context_type}_{','.join(sorted(current_advisors))}".encode()).hexdigest()
+        cache_key = hashlib.md5(f"{query}_{context_type}_{','.join(sorted(current_advisors))}".encode(), usedforsecurity=False).hexdigest()  # nosec B324 - MD5 used for cache key, not security
         
         if cache_key in self.context_cache:
             cached_context = self.context_cache[cache_key]
@@ -323,7 +323,7 @@ class AdvancedMemoryManager:
     def _generate_memory_id(self, content: str) -> str:
         """Generate unique memory ID."""
         timestamp = datetime.now().isoformat()
-        content_hash = hashlib.md5(content.encode()).hexdigest()[:8]
+        content_hash = hashlib.md5(content.encode(), usedforsecurity=False).hexdigest()[:8]  # nosec B324 - MD5 used for content hash, not security
         return f"mem_{timestamp}_{content_hash}"
     
     def _extract_keywords(self, content: str) -> Set[str]:

@@ -297,11 +297,11 @@ Consider: What stories are emerging? What character arcs are developing? What hi
         except (json.JSONDecodeError, Exception) as e:
             self.logger.warning(f"Failed to parse LLM narrative analysis: {e}")
             return {
-                "cultural_evolution": random.uniform(0.1, 0.4),
-                "historical_significance": random.uniform(0.2, 0.6),
-                "heroic_moments": random.uniform(0.1, 0.5),
-                "tragic_elements": random.uniform(0.0, 0.4),
-                "redemption_arcs": random.uniform(0.1, 0.3)
+                "cultural_evolution": random.uniform(0.1, 0.4),  # nosec B311 - Using random for game mechanics, not security
+                "historical_significance": random.uniform(0.2, 0.6),  # nosec B311 - Using random for game mechanics, not security
+                "heroic_moments": random.uniform(0.1, 0.5),  # nosec B311 - Using random for game mechanics, not security
+                "tragic_elements": random.uniform(0.0, 0.4),  # nosec B311 - Using random for game mechanics, not security
+                "redemption_arcs": random.uniform(0.1, 0.3)  # nosec B311 - Using random for game mechanics, not security
             }
     
     async def create_narrative_event(self, title: str, description: str, 

@@ -238,9 +238,8 @@ class DynamicCrisisManager:
         
         escalation_chance = base_escalation * urgency_multiplier + no_response_penalty
         
-        if random.random() < escalation_chance and crisis.escalation_level < 1.0:
-            # Escalate the crisis
-            crisis.escalation_level = min(1.0, crisis.escalation_level + random.uniform(0.1, 0.3))
+        if random.random() < escalation_chance and crisis.escalation_level < 1.0:  # nosec B311 - Using random for game mechanics, not security
+            crisis.escalation_level = min(1.0, crisis.escalation_level + random.uniform(0.1, 0.3))  # nosec B311 - Using random for game mechanics, not security
             crisis.last_update = datetime.now()
             
             # Increase effects with escalation
@@ -261,7 +260,7 @@ class DynamicCrisisManager:
         time_since_last = (datetime.now() - self.last_crisis_check).total_seconds() / 3600
         crisis_chance = self.crisis_probability * time_since_last
         
-        if random.random() < crisis_chance:
+        if random.random() < crisis_chance:  # nosec B311 - Using random for game mechanics, not security
             new_crisis = await self._generate_new_crisis()
             if new_crisis:
                 self.active_crises[new_crisis.crisis_id] = new_crisis
@@ -272,9 +271,7 @@ class DynamicCrisisManager:
     async def _generate_new_crisis(self) -> Optional[CrisisEvent]:
         """Generate a new dynamic crisis using AI."""
         crisis_types = list(CrisisType)
-        crisis_type = random.choice(crisis_types)
-        
-        # Generate crisis using AI
+        crisis_type = random.choice(crisis_types)  # nosec B311 - Using random for game mechanics, not security
         crisis_details = await self._ai_generate_crisis_details(crisis_type)
         
         if not crisis_details:
@@ -310,7 +307,7 @@ class DynamicCrisisManager:
             affected_regions=crisis_details.get("regions", []),
             key_actors=crisis_details.get("actors", []),
             resolution_deadline=resolution_deadline,
-            media_attention=random.uniform(0.3, 0.8)
+            media_attention=random.uniform(0.3, 0.8)  # nosec B311 - Using random for game mechanics, not security
         )
         
         # Generate initial response options
@@ -620,7 +617,7 @@ class DynamicCrisisManager:
         self.crisis_decisions.append(decision)
         
         # Calculate response success
-        success_roll = random.random()
+        success_roll = random.random()  # nosec B311 - Using random for game mechanics, not security
         response_succeeded = success_roll < response_option.success_probability
         
         # Apply effects

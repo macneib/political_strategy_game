@@ -304,11 +304,11 @@ Return JSON with values 0.0-1.0:
         except (json.JSONDecodeError, Exception) as e:
             self.logger.warning(f"Failed to parse LLM propaganda analysis: {e}")
             return {
-                "external_threats": random.uniform(0.1, 0.4),
-                "economic_concerns": random.uniform(0.2, 0.6),
-                "succession_uncertainty": random.uniform(0.0, 0.3),
-                "reform_resistance": random.uniform(0.1, 0.5),
-                "foreign_influence": random.uniform(0.0, 0.3)
+                "external_threats": random.uniform(0.1, 0.4),  # nosec B311 - Using random for game mechanics, not security
+                "economic_concerns": random.uniform(0.2, 0.6),  # nosec B311 - Using random for game mechanics, not security
+                "succession_uncertainty": random.uniform(0.0, 0.3),  # nosec B311 - Using random for game mechanics, not security
+                "reform_resistance": random.uniform(0.1, 0.5),  # nosec B311 - Using random for game mechanics, not security
+                "foreign_influence": random.uniform(0.0, 0.3)  # nosec B311 - Using random for game mechanics, not security
             }
     
     async def generate_propaganda_message(self, campaign_objective: str, target_audience: PropagandaTarget,
@@ -430,7 +430,7 @@ Return JSON format:
         }
         
         # Generate 2-3 initial messages
-        for i in range(random.randint(2, 3)):
+        for i in range(random.randint(2, 3)):  # nosec B311 - Using random for game mechanics, not security
             message = await self.generate_propaganda_message(
                 objective, target_audience, orchestrator, current_context
             )
@@ -490,7 +490,7 @@ Return only the campaign name, no explanation."""
         if total_investment > 100:  # High-resource campaigns are more visible
             detection_chance += 0.2
         
-        detected = random.random() < detection_chance
+        detected = random.random() < detection_chance  # nosec B311 - Using random for game mechanics, not security
         
         if detected and detector not in campaign.detected_by:
             campaign.detected_by.append(detector)

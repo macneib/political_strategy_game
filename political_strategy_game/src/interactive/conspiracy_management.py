@@ -421,14 +421,14 @@ class InteractiveConspiracyManager:
         
         # Generate results
         import random
-        success = random.random() < success_chance
+        success = random.random() < success_chance  # nosec B311 - Using random for game mechanics, not security
         
         if success:
             evidence = self._generate_evidence(step.action_type, step.target)
-            confidence = min(0.9, skill_level + random.uniform(0.1, 0.3))
+            confidence = min(0.9, skill_level + random.uniform(0.1, 0.3))  # nosec B311 - Using random for game mechanics, not security
         else:
             evidence = ["Investigation inconclusive", "No actionable intelligence gathered"]
-            confidence = max(0.1, random.uniform(0.1, 0.4))
+            confidence = max(0.1, random.uniform(0.1, 0.4))  # nosec B311 - Using random for game mechanics, not security
             
         return {
             "evidence": evidence,
@@ -458,7 +458,7 @@ class InteractiveConspiracyManager:
         
         templates = evidence_templates.get(action_type, ["Generic investigation evidence"])
         import random
-        return [random.choice(templates)]
+        return [random.choice(templates)]  # nosec B311 - Using random for game mechanics, not security
         
     def _calculate_overall_confidence(self, investigation: ConspiracyInvestigation) -> float:
         """Calculate overall confidence level for the investigation."""

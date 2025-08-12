@@ -273,10 +273,10 @@ Consider economic pressures, diplomatic tensions, military threats, and policy c
         except (json.JSONDecodeError, Exception) as e:
             self.logger.warning(f"Failed to parse LLM faction analysis: {e}")
             return {
-                "resource_competition": random.uniform(0.2, 0.6),
-                "external_pressure": random.uniform(0.1, 0.4),
-                "succession_uncertainty": random.uniform(0.0, 0.5),
-                "policy_disagreements": random.uniform(0.3, 0.7)
+                "resource_competition": random.uniform(0.2, 0.6),  # nosec B311 - Using random for game mechanics, not security
+                "external_pressure": random.uniform(0.1, 0.4),  # nosec B311 - Using random for game mechanics, not security
+                "succession_uncertainty": random.uniform(0.0, 0.5),  # nosec B311 - Using random for game mechanics, not security
+                "policy_disagreements": random.uniform(0.3, 0.7)  # nosec B311 - Using random for game mechanics, not security
             }
     
     async def generate_faction_ideology(self, founding_advisor: str, conditions: Dict[str, float]) -> FactionIdeology:
@@ -593,15 +593,15 @@ Return JSON format:
                         unaffiliated_advisors.append(advisor_name)
             
             # Try to create new faction
-            if unaffiliated_advisors and random.random() < 0.4:  # 40% chance per turn
-                founder = random.choice(unaffiliated_advisors)
+            if unaffiliated_advisors and random.random() < 0.4:  # nosec B311 - Using random for game mechanics, not security
+                founder = random.choice(unaffiliated_advisors)  # nosec B311 - Using random for game mechanics, not security
                 new_faction = await self.create_political_faction(founder, conditions)
                 results["new_factions"].append(new_faction.faction_id)
         
         # Process existing factions
         for faction in list(self.active_factions.values()):
             # Evaluate alliance opportunities
-            if faction.status == FactionStatus.ACTIVE and random.random() < 0.3:  # 30% chance
+            if faction.status == FactionStatus.ACTIVE and random.random() < 0.3:  # nosec B311 - Using random for game mechanics, not security
                 opportunities = await self.evaluate_alliance_opportunities(faction)
                 
                 if opportunities:
