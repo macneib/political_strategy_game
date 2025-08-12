@@ -197,8 +197,8 @@ class EspionageManager:
             asset_type=asset_type,
             specialization=specialization,
             assigned_target=target_civilization,
-            skill_level=random.uniform(0.3, 0.8),  # Random initial skill
-            exposure_risk=random.uniform(0.05, 0.2)
+            skill_level=random.uniform(0.3, 0.8),  # nosec B311 - Using random for game mechanics, not security
+            exposure_risk=random.uniform(0.05, 0.2)  # nosec B311 - Using random for game mechanics, not security
         )
         
         # Cost increases with skill level
@@ -224,7 +224,7 @@ class EspionageManager:
         self.intelligence_budget -= training_cost
         
         # Improve skill based on training type
-        improvement = random.uniform(0.05, 0.15)
+        improvement = random.uniform(0.05, 0.15)  # nosec B311 - Using random for game mechanics, not security
         if training_type == "infiltration":
             asset.infiltration_level = min(1.0, asset.infiltration_level + improvement)
         elif training_type == "technical":
@@ -359,13 +359,13 @@ class EspionageManager:
         operation.progress = min(1.0, operation.progress + progress_increase)
         
         # Check for discovery
-        discovery_check = random.random()
+        discovery_check = random.random()  # nosec B311 - Using random for game mechanics, not security
         if discovery_check < operation.discovery_risk:
             return self._handle_operation_discovery(operation, current_turn)
         
         # Check for complications
         complication_chance = 0.1 + (operation.difficulty.value == "hard") * 0.1
-        if random.random() < complication_chance:
+        if random.random() < complication_chance:  # nosec B311 - Using random for game mechanics, not security
             return self._handle_operation_complication(operation, current_turn)
         
         return {
@@ -647,7 +647,7 @@ class EspionageManager:
         
         # Burn some assets
         assets_to_burn = random.sample(operation.assigned_assets, 
-                                     min(2, len(operation.assigned_assets)))
+                                     min(2, len(operation.assigned_assets)))  # nosec B311 - Using random for game mechanics, not security
         for asset_id in assets_to_burn:
             self.burn_asset(asset_id, "operation_discovered")
         
@@ -683,7 +683,7 @@ class EspionageManager:
             "Asset loyalty questioned, requiring reassurance"
         ]
         
-        complication = random.choice(complications)
+        complication = random.choice(complications)  # nosec B311 - Using random for game mechanics, not security
         operation.side_effects.append(complication)
         
         # Slow down operation
@@ -720,7 +720,7 @@ class EspionageManager:
         
         final_success_rate = min(0.95, base_success + asset_skill_bonus)
         
-        roll = random.random()
+        roll = random.random()  # nosec B311 - Using random for game mechanics, not security
         if roll < final_success_rate * 0.3:
             return OperationOutcome.COMPLETE_SUCCESS
         elif roll < final_success_rate * 0.7:
@@ -769,15 +769,15 @@ class EspionageManager:
         
         if operation.operation_type == EspionageOperationType.POLITICAL_INTELLIGENCE:
             content = {
-                "government_stability": random.uniform(0.3, 0.9),
-                "leader_approval": random.uniform(0.2, 0.8),
+                "government_stability": random.uniform(0.3, 0.9),  # nosec B311 - Using random for game mechanics, not security
+                "leader_approval": random.uniform(0.2, 0.8),  # nosec B311 - Using random for game mechanics, not security
                 "recent_decisions": ["Policy change on taxation", "Military deployment approved"],
                 "upcoming_events": ["Council meeting in 3 turns", "Trade negotiation planned"]
             }
         
         elif operation.operation_type == EspionageOperationType.ADVISOR_SURVEILLANCE:
             content = {
-                "advisor_loyalty": random.uniform(0.3, 0.9),
+                "advisor_loyalty": random.uniform(0.3, 0.9),  # nosec B311 - Using random for game mechanics, not security
                 "recent_activities": ["Met with faction leaders", "Reviewed military reports"],
                 "relationships": {"strong_allies": 2, "neutral": 3, "rivals": 1},
                 "personal_vulnerabilities": ["Financial difficulties", "Family pressure"]
@@ -785,7 +785,7 @@ class EspionageManager:
         
         elif operation.operation_type == EspionageOperationType.FACTION_MONITORING:
             content = {
-                "faction_strength": random.uniform(0.2, 0.8),
+                "faction_strength": random.uniform(0.2, 0.8),  # nosec B311 - Using random for game mechanics, not security
                 "faction_goals": ["Increase military spending", "Reform taxation"],
                 "faction_conflicts": ["Dispute with economic faction", "Competition for influence"],
                 "key_members": ["General Marcus", "Admiral Chen", "Captain Rodriguez"]

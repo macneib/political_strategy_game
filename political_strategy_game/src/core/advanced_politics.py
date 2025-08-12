@@ -399,7 +399,7 @@ class AdvancedPoliticalManager(BaseModel):
             
             recruitment_prob = (trust_factor * 0.4) + (conspiracy_factor * 0.6)
             
-            if random.random() < recruitment_prob:
+            if random.random() < recruitment_prob:  # nosec B311 - Using random for game mechanics, not security
                 return conspiracy.add_member(target_id)
         
         return False
@@ -473,7 +473,7 @@ class AdvancedPoliticalManager(BaseModel):
                 conspiracy.discovery_risk = min(1.0, conspiracy.discovery_risk + 0.05)
             
             # Check for conspiracy detection
-            if random.random() < conspiracy.discovery_risk:
+            if random.random() < conspiracy.discovery_risk:  # nosec B311 - Using random for game mechanics, not security
                 conspiracy.status = ConspiracyStatus.EXPOSED
                 results["conspiracies_detected"].append({
                     "id": conspiracy.id,

@@ -240,7 +240,7 @@ def demonstrate_event_system():
                                     break
                         
                         if not chosen_choice:
-                            chosen_choice = random.choice(event.choices)
+                            chosen_choice = random.choice(event.choices)  # nosec B311 - Using random for game mechanics, not security
                         
                         print(f"\n⚡ DECISION: {chosen_choice.title}")
                         

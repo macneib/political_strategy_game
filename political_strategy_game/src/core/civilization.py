@@ -288,9 +288,7 @@ class Civilization(BaseModel):
         
         # Random factor
         import random
-        success = random.random() < success_chance
-        
-        # Create coup memories for all involved parties
+        success = random.random() < success_chance  # nosec B311 - Using random for game mechanics, not security
         coup_content = f"{'Successful' if success else 'Failed'} coup attempt by {len(conspirators)} conspirators"
         
         for conspirator_id in conspirators:
