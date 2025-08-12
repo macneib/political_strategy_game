@@ -192,7 +192,7 @@ class EventTemplate(BaseModel):
         # Random variable selection
         for var_name, options in self.variables.items():
             if f"{{{var_name}}}" in result:
-                selected = random.choice(options)
+                selected = random.choice(options)  # nosec B311 - Using random for game mechanics, not security
                 result = result.replace(f"{{{var_name}}}", selected)
         
         return result
@@ -325,7 +325,7 @@ class EventManager(BaseModel):
         new_events = []
         
         # Simple random event generation
-        if random.random() < 0.3:  # 30% chance per turn
+        if random.random() < 0.3:  # nosec B311 - Using random for game mechanics, not security
             available_templates = []
             
             for template_id, template in self.event_templates.items():
@@ -339,7 +339,7 @@ class EventManager(BaseModel):
             if available_templates:
                 # Weight-based selection
                 weights = [t.frequency_weight for t in available_templates]
-                selected_template = random.choices(available_templates, weights=weights)[0]
+                selected_template = random.choices(available_templates, weights=weights)[0]  # nosec B311 - Using random for game mechanics, not security
                 
                 # Generate event
                 context = self._get_generation_context()

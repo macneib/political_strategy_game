@@ -39,10 +39,10 @@ class PoliticalStrategyGame:
         
         # Create leader
         leader_personality = PersonalityProfile(
-            ambition=random.uniform(0.4, 0.9),
-            loyalty=random.uniform(0.6, 1.0),
-            charisma=random.uniform(0.3, 0.8),
-            pragmatism=random.uniform(0.2, 0.8),
+            ambition=random.uniform(0.4, 0.9),  # nosec B311 - Using random for game mechanics, not security
+            loyalty=random.uniform(0.6, 1.0),  # nosec B311 - Using random for game mechanics, not security
+            charisma=random.uniform(0.3, 0.8),  # nosec B311 - Using random for game mechanics, not security
+            pragmatism=random.uniform(0.2, 0.8),  # nosec B311 - Using random for game mechanics, not security
             ideology="pragmatic"
         )
         
@@ -50,7 +50,7 @@ class PoliticalStrategyGame:
             name=f"Ruler of {civ_name}",
             civilization_id="",  # Will be set after civilization creation
             personality=leader_personality,
-            leadership_style=random.choice(list(LeadershipStyle))
+            leadership_style=random.choice(list(LeadershipStyle))  # nosec B311 - Using random for game mechanics, not security
         )
         
         # Create civilization
@@ -74,14 +74,14 @@ class PoliticalStrategyGame:
         
         for name, role, personality_overrides in advisor_configs:
             personality_data = {
-                "ambition": random.uniform(0.2, 0.8),
-                "loyalty": random.uniform(0.3, 0.9),
-                "charisma": random.uniform(0.2, 0.7),
-                "pragmatism": random.uniform(0.3, 0.8),
-                "corruption": random.uniform(0.0, 0.3),
-                "paranoia": random.uniform(0.0, 0.4),
-                "competence": random.uniform(0.4, 0.9),
-                "ideology": random.choice(["militaristic", "diplomatic", "economic", "religious", "pragmatic"])
+                "ambition": random.uniform(0.2, 0.8),  # nosec B311 - Using random for game mechanics, not security
+                "loyalty": random.uniform(0.3, 0.9),  # nosec B311 - Using random for game mechanics, not security
+                "charisma": random.uniform(0.2, 0.7),  # nosec B311 - Using random for game mechanics, not security
+                "pragmatism": random.uniform(0.3, 0.8),  # nosec B311 - Using random for game mechanics, not security
+                "corruption": random.uniform(0.0, 0.3),  # nosec B311 - Using random for game mechanics, not security
+                "paranoia": random.uniform(0.0, 0.4),  # nosec B311 - Using random for game mechanics, not security
+                "competence": random.uniform(0.4, 0.9),  # nosec B311 - Using random for game mechanics, not security
+                "ideology": random.choice(["militaristic", "diplomatic", "economic", "religious", "pragmatic"])  # nosec B311 - Using random for game mechanics, not security
             }
             personality_data.update(personality_overrides)
             
@@ -104,12 +104,12 @@ class PoliticalStrategyGame:
                 compatibility = advisor1.personality.compatibility_score(advisor2.personality)
                 
                 relationship1 = advisor1.get_relationship(advisor2.id)
-                relationship1.trust = random.uniform(-0.3, compatibility)
-                relationship1.influence = random.uniform(0.0, 0.5)
+                relationship1.trust = random.uniform(-0.3, compatibility)  # nosec B311 - Using random for game mechanics, not security
+                relationship1.influence = random.uniform(0.0, 0.5)  # nosec B311 - Using random for game mechanics, not security
                 
                 relationship2 = advisor2.get_relationship(advisor1.id)
-                relationship2.trust = random.uniform(-0.3, compatibility)
-                relationship2.influence = random.uniform(0.0, 0.5)
+                relationship2.trust = random.uniform(-0.3, compatibility)  # nosec B311 - Using random for game mechanics, not security
+                relationship2.influence = random.uniform(0.0, 0.5)  # nosec B311 - Using random for game mechanics, not security
         
         self.civilizations[civilization.id] = civilization
         return civilization.id

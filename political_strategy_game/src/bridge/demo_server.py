@@ -161,7 +161,7 @@ class DemoPoliticalSimulation:
         
         # Generate random events based on probabilities
         for event_type, probability in self.event_probabilities.items():
-            if random.random() < probability:
+            if random.random() < probability:  # nosec B311 - Using random for game mechanics, not security
                 event = self._generate_event(event_type)
                 if event:
                     events.append(event)
@@ -179,8 +179,8 @@ class DemoPoliticalSimulation:
         timestamp = datetime.now()
         
         if event_type == "advisor_loyalty_change":
-            advisor = random.choice(self.advisors)
-            change = random.uniform(-0.2, 0.2)
+            advisor = random.choice(self.advisors)  # nosec B311 - Using random for game mechanics, not security
+            change = random.uniform(-0.2, 0.2)  # nosec B311 - Using random for game mechanics, not security
             
             return PoliticalEvent(
                 event_id=event_id,
@@ -195,7 +195,7 @@ class DemoPoliticalSimulation:
             )
         
         elif event_type == "advisor_conflict":
-            advisor1, advisor2 = random.sample(self.advisors, 2)
+            advisor1, advisor2 = random.sample(self.advisors, 2)  # nosec B311 - Using random for game mechanics, not security
             
             return PoliticalEvent(
                 event_id=event_id,
@@ -211,7 +211,7 @@ class DemoPoliticalSimulation:
         
         elif event_type == "crisis_emergence":
             crisis_types = ["economic_downturn", "natural_disaster", "external_threat", "civil_unrest"]
-            crisis_type = random.choice(crisis_types)
+            crisis_type = random.choice(crisis_types)  # nosec B311 - Using random for game mechanics, not security
             
             return PoliticalEvent(
                 event_id=event_id,
@@ -226,7 +226,7 @@ class DemoPoliticalSimulation:
             )
         
         elif event_type == "conspiracy_discovered":
-            conspirator = random.choice(self.advisors)
+            conspirator = random.choice(self.advisors)  # nosec B311 - Using random for game mechanics, not security
             
             return PoliticalEvent(
                 event_id=event_id,
@@ -241,7 +241,7 @@ class DemoPoliticalSimulation:
             )
         
         elif event_type == "diplomatic_incident":
-            target_civ = random.choice(["northern_kingdom", "eastern_republic", "southern_alliance"])
+            target_civ = random.choice(["northern_kingdom", "eastern_republic", "southern_alliance"])  # nosec B311 - Using random for game mechanics, not security
             
             return PoliticalEvent(
                 event_id=event_id,
@@ -251,7 +251,7 @@ class DemoPoliticalSimulation:
                 description=f"A diplomatic incident has occurred affecting relations with {target_civ.replace('_', ' ')}.",
                 severity="moderate",
                 participants=[],
-                consequences={"diplomatic_impact": random.uniform(-0.2, -0.05)},
+                consequences={"diplomatic_impact": random.uniform(-0.2, -0.05)},  # nosec B311 - Using random for game mechanics, not security
                 timestamp=timestamp
             )
         
@@ -294,16 +294,16 @@ class DemoPoliticalSimulation:
         # Gradually evolve advisor states
         for advisor in self.advisors:
             # Small random changes to stress and mood
-            advisor.stress_level += random.uniform(-0.05, 0.05)
+            advisor.stress_level += random.uniform(-0.05, 0.05)  # nosec B311 - Using random for game mechanics, not security
             advisor.stress_level = max(0.0, min(1.0, advisor.stress_level))
             
             # Mood changes based on stress
             if advisor.stress_level > 0.7:
-                advisor.current_mood = random.choice(["stressed", "anxious", "overwhelmed"])
+                advisor.current_mood = random.choice(["stressed", "anxious", "overwhelmed"])  # nosec B311 - Using random for game mechanics, not security
             elif advisor.stress_level < 0.3:
-                advisor.current_mood = random.choice(["calm", "confident", "optimistic"])
+                advisor.current_mood = random.choice(["calm", "confident", "optimistic"])  # nosec B311 - Using random for game mechanics, not security
             else:
-                advisor.current_mood = random.choice(["focused", "concerned", "determined"])
+                advisor.current_mood = random.choice(["focused", "concerned", "determined"])  # nosec B311 - Using random for game mechanics, not security
         
         self.logger.info(f"Advanced to turn {self.current_turn}")
 
@@ -406,7 +406,7 @@ async def run_demo_server():
                           f"Events: {len(simulation.recent_events)}")
             
             # Occasionally generate random events between turns
-            if random.random() < 0.1:  # 10% chance per second
+            if random.random() < 0.1:  # nosec B311 - Using random for game mechanics, not security
                 events = simulation.simulate_turn_events()
                 for event in events[:2]:  # Limit to 2 events
                     bridge_manager.broadcast_political_event(event, EventPriority.LOW)

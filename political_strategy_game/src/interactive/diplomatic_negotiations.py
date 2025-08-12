@@ -206,9 +206,7 @@ class RealTimeDiplomaticNegotiations:
                                    issues: Dict[str, Dict[str, Any]],
                                    context: Dict[str, Any] = None) -> str:
         """Start a new diplomatic negotiation session."""
-        negotiation_id = f"negotiation_{int(time.time())}_{random.randint(1000, 9999)}"
-        
-        # Initialize negotiation session
+        negotiation_id = f"negotiation_{int(time.time())}_{random.randint(1000, 9999)}"  # nosec B311 - Using random for game mechanics, not security
         session = {
             "id": negotiation_id,
             "type": negotiation_type,
@@ -265,7 +263,7 @@ class RealTimeDiplomaticNegotiations:
                 ideal = self._calculate_ideal_position(party, issue_name, issue_config)
                 minimum = max(0.0, ideal - (party.diplomatic_skill * 0.4))
                 flexibility = party.cooperation_tendency * 0.3
-                priority = random.uniform(0.3, 1.0)
+                priority = random.uniform(0.3, 1.0)  # nosec B311 - Using random for game mechanics, not security
                 
                 position = NegotiationPosition(
                     party_id=party_id,
@@ -284,9 +282,7 @@ class RealTimeDiplomaticNegotiations:
                                   issue_name: str, issue_config: Dict[str, Any]) -> float:
         """Calculate a party's ideal position on an issue."""
         # Base position influenced by party characteristics
-        base_position = random.uniform(0.3, 0.9)
-        
-        # Adjust based on power level
+        base_position = random.uniform(0.3, 0.9)  # nosec B311 - Using random for game mechanics, not security
         power_adjustment = (party.power_level - 0.5) * 0.2
         
         # Adjust based on issue type and party role
@@ -441,17 +437,17 @@ class RealTimeDiplomaticNegotiations:
         issues = session["issues"]
         
         # Randomly select a party to make a proposal
-        proposing_party_id = random.choice(list(parties.keys()))
+        proposing_party_id = random.choice(list(parties.keys()))  # nosec B311 - Using random for game mechanics, not security
         proposing_party = parties[proposing_party_id]
         
         # Select an issue to address
-        issue_name = random.choice(list(issues.keys()))
+        issue_name = random.choice(list(issues.keys()))  # nosec B311 - Using random for game mechanics, not security
         
         if issue_name in proposing_party.positions:
             position = proposing_party.positions[issue_name]
             
             # Generate a proposal (slightly away from ideal toward compromise)
-            proposal_value = position.ideal_outcome * 0.85 + 0.15 * random.uniform(0.3, 0.7)
+            proposal_value = position.ideal_outcome * 0.85 + 0.15 * random.uniform(0.3, 0.7)  # nosec B311 - Using random for game mechanics, not security
             proposal_value = max(position.minimum_acceptable, min(1.0, proposal_value))
             
             # Update party's current offer
@@ -531,16 +527,14 @@ class RealTimeDiplomaticNegotiations:
         # Select parties for bilateral bargaining
         party_ids = list(parties.keys())
         if len(party_ids) >= 2:
-            bargaining_parties = random.sample(party_ids, 2)
+            bargaining_parties = random.sample(party_ids, 2)  # nosec B311 - Using random for game mechanics, not security
             party_a = parties[bargaining_parties[0]]
             party_b = parties[bargaining_parties[1]]
             
             # Select an issue for bargaining
             common_issues = set(party_a.positions.keys()) & set(party_b.positions.keys())
             if common_issues:
-                issue = random.choice(list(common_issues))
-                
-                # Generate bargaining exchange
+                issue = random.choice(list(common_issues))  # nosec B311 - Using random for game mechanics, not security
                 await self._simulate_bilateral_bargaining(negotiation_id, party_a, party_b, issue)
     
     async def _simulate_bilateral_bargaining(self, negotiation_id: str,
@@ -613,9 +607,7 @@ class RealTimeDiplomaticNegotiations:
         # Attempt to create package deals
         if len(issues) >= 2:
             issue_names = list(issues.keys())
-            package_issues = random.sample(issue_names, min(3, len(issue_names)))
-            
-            # Find parties with complementary interests
+            package_issues = random.sample(issue_names, min(3, len(issue_names)))  # nosec B311 - Using random for game mechanics, not security
             for party_id, party in parties.items():
                 if party.role == PartyRole.MEDIATOR or party.diplomatic_skill > 0.7:
                     # This party attempts to broker a package deal
@@ -700,7 +692,7 @@ class RealTimeDiplomaticNegotiations:
                 for issue, position in party.positions.items():
                     # Make final concession if possible
                     if position.flexibility > 0.1:
-                        final_offer = position.current_offer + (position.flexibility * 0.5 * random.uniform(-1, 1))
+                        final_offer = position.current_offer + (position.flexibility * 0.5 * random.uniform(-1, 1))  # nosec B311 - Using random for game mechanics, not security
                         final_offer = max(position.minimum_acceptable, min(1.0, final_offer))
                         
                         party.adjust_position(issue, final_offer, "Final negotiation adjustment")
@@ -977,8 +969,8 @@ class RealTimeDiplomaticNegotiations:
             
             # Parties may adjust positions during recess
             for position in party.positions.values():
-                if random.random() < 0.3:  # 30% chance of position adjustment
-                    adjustment = random.uniform(-0.05, 0.05)
+                if random.random() < 0.3:  # nosec B311 - Using random for game mechanics, not security
+                    adjustment = random.uniform(-0.05, 0.05)  # nosec B311 - Using random for game mechanics, not security
                     new_offer = max(position.minimum_acceptable, 
                                   min(1.0, position.current_offer + adjustment))
                     party.adjust_position(position.issue, new_offer, "Recess reflection")

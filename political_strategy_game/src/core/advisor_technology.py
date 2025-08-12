@@ -318,7 +318,7 @@ class AdvisorLobbyingManager(BaseModel):
             base_effectiveness += experience_bonus
         
         # Random factor for uncertainty
-        random_factor = 0.8 + (random.random() * 0.4)  # 0.8 to 1.2
+        random_factor = 0.8 + (random.random() * 0.4)  # nosec B311 - Using random for game mechanics, not security (0.8 to 1.2)
         final_effectiveness = base_effectiveness * random_factor
         
         # Calculate resistance

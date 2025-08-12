@@ -374,7 +374,7 @@ Respond in JSON format:
                 recruitment_method="Self-initiated"
             )
             
-            plot_id = f"conspiracy_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"
+            plot_id = f"conspiracy_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{random.randint(1000, 9999)}"  # nosec B311 - Using random for game mechanics, not security
             
             return ConspiracyPlot(
                 plot_id=plot_id,
@@ -528,7 +528,7 @@ Respond in JSON format:
             recruitment_targets = await self.evaluate_recruitment_targets(conspiracy)
             if recruitment_targets:
                 target_name, suitability = recruitment_targets[0]
-                if random.random() < suitability * 0.5:  # 50% max chance modified by suitability
+                if random.random() < suitability * 0.5:  # nosec B311 - Using random for game mechanics, not security
                     await self._recruit_conspirator(conspiracy, target_name)
                     results["new_participants"].append(target_name)
             
@@ -539,21 +539,21 @@ Respond in JSON format:
         
         elif conspiracy.status == ConspiracyStatus.RECRUITING:
             # Continue recruitment and move to preparation
-            if len(conspiracy.participants) >= 3 or random.random() < 0.3:
+            if len(conspiracy.participants) >= 3 or random.random() < 0.3:  # nosec B311 - Using random for game mechanics, not security
                 conspiracy.status = ConspiracyStatus.PREPARATION
                 results["status_change"] = True
         
         elif conspiracy.status == ConspiracyStatus.PREPARATION:
             # Gather resources and prepare for execution
-            results["progress"] = random.uniform(0.2, 0.4)
-            if random.random() < 0.25:  # 25% chance to move to execution
+            results["progress"] = random.uniform(0.2, 0.4)  # nosec B311 - Using random for game mechanics, not security
+            if random.random() < 0.25:  # nosec B311 - Using random for game mechanics, not security
                 conspiracy.status = ConspiracyStatus.EXECUTION
                 results["status_change"] = True
         
         elif conspiracy.status == ConspiracyStatus.EXECUTION:
             # Execute the conspiracy
             success_chance = self._calculate_conspiracy_success_chance(conspiracy, game_state)
-            if random.random() < success_chance:
+            if random.random() < success_chance:  # nosec B311 - Using random for game mechanics, not security
                 conspiracy.status = ConspiracyStatus.SUCCESSFUL
                 results["events"].append(f"Conspiracy '{conspiracy.title}' has succeeded!")
             else:
@@ -565,7 +565,7 @@ Respond in JSON format:
         results["discovery_risk"] = self._calculate_discovery_risk(conspiracy)
         
         # Check for discovery
-        if random.random() < results["discovery_risk"]:
+        if random.random() < results["discovery_risk"]:  # nosec B311 - Using random for game mechanics, not security
             conspiracy.status = ConspiracyStatus.DISCOVERED
             results["events"].append(f"Conspiracy '{conspiracy.title}' has been discovered!")
             results["status_change"] = True
@@ -680,7 +680,7 @@ Respond in JSON format:
             conspiracy_chance *= self.political_instability_multiplier
         
         # Check if a conspiracy should form this turn
-        if random.random() < conspiracy_chance:
+        if random.random() < conspiracy_chance:  # nosec B311 - Using random for game mechanics, not security
             # Select an advisor to initiate the conspiracy
             for advisor_name in self.dialogue_system.advisor_council.advisors:
                 motive = await self.generate_conspiracy_motive(advisor_name, conditions)
