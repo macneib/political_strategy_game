@@ -491,6 +491,13 @@ class TestEspionageIntegration:
             "informant", "enemy_civ", [EspionageOperationType.POLITICAL_INTELLIGENCE]
         )
         
+        # Ensure assets have sufficient skill for the test
+        # (The random skill generation can sometimes produce too low skills)
+        if agent.skill_level < 0.5:
+            agent.skill_level = 0.6
+        if informant.skill_level < 0.5:
+            informant.skill_level = 0.6
+        
         # 2. Plan operation
         operation = manager.plan_operation(
             EspionageOperationType.ADVISOR_SURVEILLANCE,
