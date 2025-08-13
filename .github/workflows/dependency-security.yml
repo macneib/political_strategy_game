@@ -124,7 +124,7 @@ jobs:
 
     - name: Create issue for security findings
       if: hashFiles('political_strategy_game/safety_report.json') != '' || hashFiles('political_strategy_game/pip_audit_report.json') != ''
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: |
           const fs = require('fs');
