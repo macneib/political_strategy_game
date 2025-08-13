@@ -68,7 +68,7 @@ def mock_game_state():
         def to_dict(self):
             return {
                 'turn_state': self.turn_state.to_dict(),
-                'civilizations': [civ.to_dict() for civ in self.civilizations],
+                'civilizations': [{'civilization_id': civ.civilization_id} for civ in self.civilizations],
                 'advisors': self.advisors,
                 'global_events': self.global_events,
                 'metadata': self.metadata
@@ -115,11 +115,18 @@ def mock_civilizations():
         
         def model_dump(self):
             return {
-                'name': self.name,
                 'civilization_id': self.civilization_id,
-                'leader': 'Test Leader',
-                'advisors': [],
-                'test_data': 'mock_value'
+                'name': self.name,
+                'leader': 'Test Leader',  # Add the missing 'leader' field
+                'leader_name': 'Test Leader',
+                'political_stability': 0.75,
+                'economic_strength': 0.8,
+                'military_power': 0.7,
+                'diplomatic_relations': {},
+                'active_crises': [],
+                'active_conspiracies': [],
+                'recent_events': [],
+                'advisors': []  # Add the missing 'advisors' field
             }
     
     return {
@@ -128,10 +135,33 @@ def mock_civilizations():
 
 
 @pytest.fixture
-def sample_save_data(mock_game_state, mock_memory_manager):
+def sample_save_data(mock_game_state, mock_memory_manager, mock_civilizations):
     """Create sample save data for testing."""
-    # This fixture is deprecated - using direct method calls instead
-    pass
+    metadata = SaveGameMetadata(
+        save_id="test_save_data",
+        game_name="Test Save Game",
+        timestamp=datetime.now(),
+        version=SaveFileVersion.CURRENT,
+        format=SaveFileFormat.JSON,
+        compression_level=6,
+        game_turn=42,
+        civilization_count=1,
+        advisor_count=0,
+        memory_count=0,
+        file_size=0,
+        checksum="test_checksum"
+    )
+    
+    memory_banks = {}
+    for civ_id in ["test_civ"]:
+        memory_banks[civ_id] = mock_memory_manager.get_memory_bank(civ_id)
+    
+    return SaveGameData(
+        metadata=metadata,
+        game_state=mock_game_state,
+        memory_banks=memory_banks,
+        civilizations={civ_id: civ.model_dump() for civ_id, civ in mock_civilizations.items()}
+    )
 
 
 @pytest.fixture
@@ -321,16 +351,16 @@ class TestVersionManager:
         assert manager.detect_version(current_data) == SaveFileVersion.CURRENT
         
         # Test legacy version
-        legacy_data = {"version": SaveFileVersion.LEGACY_V1_0.value}
-        assert manager.detect_version(legacy_data) == SaveFileVersion.LEGACY_V1_0
+        legacy_data = {"version": SaveFileVersion.V1_0.value}
+        assert manager.detect_version(legacy_data) == SaveFileVersion.V1_0
     
     def test_needs_migration(self):
         """Test migration necessity detection."""
         manager = VersionManager()
         
         assert not manager.needs_migration(SaveFileVersion.CURRENT)
-        assert manager.needs_migration(SaveFileVersion.LEGACY_V1_0)
-        assert manager.needs_migration(SaveFileVersion.LEGACY_V1_1)
+        assert manager.needs_migration(SaveFileVersion.V1_0)
+        assert manager.needs_migration(SaveFileVersion.V1_1)
     
     def test_migration_v1_0_to_v1_1(self):
         """Test migration from V1.0 to V1.1."""
@@ -482,10 +512,10 @@ class TestBackupManager:
         assert not save_path.exists()
         
         # Restore
-        restored_path = manager.restore_backup(backup_path, save_path)
+        success = manager.restore_backup(backup_path, save_path)
         
-        assert restored_path.exists()
-        assert restored_path == save_path
+        assert success
+        assert save_path.exists()
     
     def test_cleanup_old_backups(self, temp_save_dir):
         """Test automatic cleanup of old backups."""
@@ -591,11 +621,17 @@ class TestSaveFileEncryption:
 class TestSaveFileDebugger:
     """Test save file debugging tools."""
     
-    def test_analyze_save_file(self, temp_save_dir, sample_save_data):
+    def test_analyze_save_file(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test save file analysis."""
         # Create a save file
         manager = SaveGameManager(temp_save_dir)
-        save_path = manager.save_game(sample_save_data, "debug_test", SaveFileFormat.JSON)
+        save_path = manager.save_game(
+            game_name="debug_test",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON
+        )
         
         # Analyze it
         debugger = SaveFileDebugger()
@@ -605,19 +641,32 @@ class TestSaveFileDebugger:
         assert analysis.file_size > 0
         assert analysis.format == SaveFileFormat.JSON
         assert analysis.version == SaveFileVersion.CURRENT
-        assert analysis.metadata.save_id == "debug_test"
+        assert analysis.metadata.save_id is not None  # UUID generated automatically
+        assert analysis.metadata.game_name == "debug_test"
     
-    def test_compare_save_files(self, temp_save_dir, sample_save_data):
+    def test_compare_save_files(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test save file comparison."""
         manager = SaveGameManager(temp_save_dir)
         debugger = SaveFileDebugger()
         
         # Create two similar save files
-        save_path_1 = manager.save_game(sample_save_data, "compare_1", SaveFileFormat.JSON)
+        save_path_1 = manager.save_game(
+            game_name="compare_1",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON
+        )
         
         # Modify the data slightly
-        sample_save_data.metadata.game_turn = 43
-        save_path_2 = manager.save_game(sample_save_data, "compare_2", SaveFileFormat.JSON)
+        mock_game_state.turn_state.turn_number = 43
+        save_path_2 = manager.save_game(
+            game_name="compare_2",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON
+        )
         
         # Compare
         comparison = debugger.compare_save_files(save_path_1, save_path_2)
@@ -627,13 +676,19 @@ class TestSaveFileDebugger:
         assert len(comparison.differences) > 0
         assert comparison.similarity_score < 1.0  # Should be different
     
-    def test_extract_save_data(self, temp_save_dir, sample_save_data):
+    def test_extract_save_data(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test save data extraction."""
         manager = SaveGameManager(temp_save_dir)
         debugger = SaveFileDebugger()
         
         # Create save file
-        save_path = manager.save_game(sample_save_data, "extract_test", SaveFileFormat.JSON)
+        save_path = manager.save_game(
+            game_name="extract_test",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON
+        )
         
         # Extract
         extract_dir = temp_save_dir / "extracted"
@@ -648,17 +703,30 @@ class TestSaveFileDebugger:
 class TestPerformanceAndStress:
     """Test performance and stress scenarios."""
     
-    def test_large_save_file_performance(self, temp_save_dir):
+    def test_large_save_file_performance(self, temp_save_dir, mock_memory_manager):
         """Test performance with large save files."""
         manager = SaveGameManager(temp_save_dir)
         
         # Create large save data
-        large_civilizations = {}
+        large_civilizations_dict = {}
+        large_civ_objects = []
+        large_civilizations_for_save = {}
         for i in range(100):
-            large_civilizations[f"civ_{i}"] = {
+            civ_id = f"civ_{i}"
+            civ_data = {
                 "name": f"Civilization {i}",
                 "data": "x" * 1000  # 1KB per civilization
             }
+            large_civilizations_dict[civ_id] = civ_data
+            
+            # Create mock civilization object for game_state
+            mock_civ = Mock(civilization_id=civ_id, name=f"Civilization {i}")
+            large_civ_objects.append(mock_civ)
+            
+            # Create mock civilization object with model_dump for save_game
+            mock_save_civ = Mock()
+            mock_save_civ.model_dump.return_value = civ_data
+            large_civilizations_for_save[civ_id] = mock_save_civ
         
         large_save_data = SaveGameData(
             metadata=SaveGameMetadata(
@@ -675,15 +743,21 @@ class TestPerformanceAndStress:
                 file_size=0,
                 checksum=""
             ),
-            game_state=Mock(),  # Use mock for performance
+            game_state=Mock(civilizations=large_civ_objects, advisors=[]),  # Mock with civilizations list and advisors
             memory_banks={},
-            civilizations=large_civilizations,
+            civilizations=large_civilizations_dict,
             custom_data={}
         )
         
         # Measure save time
         start_time = datetime.now()
-        save_path = manager.save_game(large_save_data, "large_test", SaveFileFormat.JSON_COMPRESSED)
+        save_path = manager.save_game(
+            game_name="large_test",
+            game_state=large_save_data.game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=large_civilizations_for_save,  # Pass the mock objects with model_dump
+            save_format=SaveFileFormat.JSON_COMPRESSED
+        )
         save_time = (datetime.now() - start_time).total_seconds()
         
         # Measure load time
@@ -696,7 +770,7 @@ class TestPerformanceAndStress:
         assert load_time < 5.0  # Should load within 5 seconds
         assert len(loaded_data.civilizations) == 100
     
-    def test_concurrent_save_operations(self, temp_save_dir, sample_save_data):
+    def test_concurrent_save_operations(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test concurrent save operations."""
         import threading
         import time
@@ -707,9 +781,11 @@ class TestPerformanceAndStress:
         def save_worker(worker_id):
             try:
                 save_path = manager.save_game(
-                    sample_save_data, 
-                    f"concurrent_{worker_id}", 
-                    SaveFileFormat.JSON
+                    game_name=f"concurrent_{worker_id}",
+                    game_state=mock_game_state,
+                    memory_manager=mock_memory_manager,
+                    civilizations=mock_civilizations,
+                    save_format=SaveFileFormat.JSON
                 )
                 results.append((worker_id, save_path.exists()))
             except Exception as e:
@@ -730,7 +806,7 @@ class TestPerformanceAndStress:
         assert len(results) == 5
         assert all(success for _, success in results)
     
-    def test_memory_usage_monitoring(self, temp_save_dir, sample_save_data):
+    def test_memory_usage_monitoring(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test memory usage during save/load operations."""
         import psutil
         import gc
@@ -743,7 +819,13 @@ class TestPerformanceAndStress:
         baseline_memory = process.memory_info().rss
         
         # Perform save operation
-        save_path = manager.save_game(sample_save_data, "memory_test", SaveFileFormat.JSON)
+        save_path = manager.save_game(
+            game_name="memory_test",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON
+        )
         save_memory = process.memory_info().rss
         
         # Perform load operation
@@ -766,25 +848,36 @@ class TestPerformanceAndStress:
 class TestIntegrationScenarios:
     """Test complete integration scenarios."""
     
-    def test_complete_save_load_cycle(self, temp_save_dir, sample_save_data):
+    def test_complete_save_load_cycle(self, temp_save_dir, mock_game_state, mock_memory_manager, mock_civilizations):
         """Test complete save/load cycle with all features."""
         manager = SaveGameManager(temp_save_dir)
         
-        # Save with compression
+        # Save first version
+        save_path_1 = manager.save_game(
+            game_name="integration_test",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON_COMPRESSED
+        )
+        
+        # Save second version to trigger backup creation
         save_path = manager.save_game(
-            sample_save_data, 
-            "integration_test", 
-            SaveFileFormat.JSON_COMPRESSED
+            game_name="integration_test",
+            game_state=mock_game_state,
+            memory_manager=mock_memory_manager,
+            civilizations=mock_civilizations,
+            save_format=SaveFileFormat.JSON_COMPRESSED
         )
         
         # Verify backup was created
-        backups = list(manager.backup_manager.backup_directory.glob("*.backup"))
+        backups = list(manager.backup_manager.backup_dir.glob("*_pre_save_*"))
         assert len(backups) >= 1
         
         # Load and verify
         loaded_data = manager.load_game(save_path)
         
-        assert loaded_data.metadata.save_id == sample_save_data.metadata.save_id
+        assert loaded_data.metadata.game_name == "integration_test"
         assert loaded_data.game_state.turn_state.turn_number == 42
         
         # Verify integrity
@@ -817,7 +910,7 @@ class TestIntegrationScenarios:
         
         # Verify data integrity
         loaded_dict = json.loads(decrypted_bytes.decode())
-        assert loaded_dict['metadata']['save_id'] == 'encrypted_test'
+        assert loaded_dict['metadata']['save_id'] == 'test_save_data'
     
     def test_version_migration_integration(self, temp_save_dir):
         """Test integration with version migration."""
