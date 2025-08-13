@@ -43,6 +43,9 @@ dev = [
 game-engine = [
     "websockets>=11.0.0",
 ]
+encryption = [
+    "cryptography>=41.0.0",
+]
 
 [build-system]
 requires = ["hatchling"]
