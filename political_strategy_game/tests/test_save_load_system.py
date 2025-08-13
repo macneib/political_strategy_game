@@ -29,7 +29,7 @@ from src.persistence.save_game_manager import (
 )
 from src.persistence.encryption import (
     SaveFileEncryption, EncryptionConfig, EncryptionMethod, 
-    KeyDerivationMethod, EncryptedSaveManager
+    KeyDerivationMethod, EncryptedSaveManager, CRYPTO_AVAILABLE
 )
 from src.persistence.save_file_debugger import SaveFileDebugger, AnalysisLevel
 
@@ -542,6 +542,7 @@ class TestBackupManager:
 class TestSaveFileEncryption:
     """Test save file encryption functionality."""
     
+    @pytest.mark.skipif(not CRYPTO_AVAILABLE, reason="Cryptography library not available")
     def test_password_encryption_decryption(self):
         """Test password-based encryption and decryption."""
         encryption = SaveFileEncryption()
@@ -565,6 +566,7 @@ class TestSaveFileEncryption:
         
         assert decrypted_data == test_data
     
+    @pytest.mark.skipif(not CRYPTO_AVAILABLE, reason="Cryptography library not available")
     def test_key_encryption_decryption(self):
         """Test key-based encryption and decryption."""
         encryption = SaveFileEncryption()
@@ -585,6 +587,7 @@ class TestSaveFileEncryption:
         
         assert decrypted_data == test_data
     
+    @pytest.mark.skipif(not CRYPTO_AVAILABLE, reason="Cryptography library not available")
     def test_wrong_password_fails(self):
         """Test that wrong password fails decryption."""
         encryption = SaveFileEncryption()
@@ -606,6 +609,7 @@ class TestSaveFileEncryption:
                 encrypted_data, metadata, password="wrong_password"
             )
     
+    @pytest.mark.skipif(not CRYPTO_AVAILABLE, reason="Cryptography library not available")
     def test_rsa_keypair_generation(self):
         """Test RSA keypair generation."""
         encryption = SaveFileEncryption()
@@ -884,6 +888,7 @@ class TestIntegrationScenarios:
         errors = manager.integrity_validator.validate_save_file(loaded_data)
         assert len(errors) == 0
     
+    @pytest.mark.skipif(not CRYPTO_AVAILABLE, reason="Cryptography library not available")
     def test_encryption_integration(self, temp_save_dir, sample_save_data):
         """Test integration with encryption system."""
         # Create encrypted save manager
