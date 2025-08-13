@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of your workflows
+    schedule:
+      interval: "weekly" # daily, weekly, or monthly
+    commit-message:
+      prefix: "deps(actions)"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/" # Path to your requirements.txt or pyproject.toml
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps(python)"
+    labels:
+      - "dependencies"
+      - "python"
