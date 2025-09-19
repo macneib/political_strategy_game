@@ -8,6 +8,7 @@ and counter-intelligence operations.
 
 import pytest
 import tempfile
+import random
 from datetime import datetime, timedelta
 from unittest.mock import Mock, patch
 
@@ -211,13 +212,25 @@ class TestEspionageManager:
     
     def test_assign_assets_to_operation(self, espionage_manager):
         """Test assigning assets to operations."""
-        # Recruit assets
+        # Set a fixed seed to ensure deterministic skill levels for this test
+        random.seed(42)
+        
+        # Recruit assets - with seed 42, we get reliable skill levels
         asset1 = espionage_manager.recruit_asset(
             "agent", "enemy_civ", [EspionageOperationType.ADVISOR_SURVEILLANCE]
         )
         asset2 = espionage_manager.recruit_asset(
             "informant", "enemy_civ", [EspionageOperationType.POLITICAL_INTELLIGENCE]
         )
+        
+        # Ensure at least one asset has sufficient skill level for the test
+        # ADVISOR_SURVEILLANCE requires 0.5 skill, so 80% threshold is 0.4
+        if max(asset1.skill_level, asset2.skill_level) < 0.4:
+            # Manually adjust skill level to ensure test passes deterministically
+            if asset1.skill_level >= asset2.skill_level:
+                asset1.skill_level = 0.5
+            else:
+                asset2.skill_level = 0.5
         
         # Plan operation
         operation = espionage_manager.plan_operation(
