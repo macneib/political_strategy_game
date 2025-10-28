@@ -362,7 +362,7 @@ jobs:
         fi
 
     - name: Upload PR summary
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: pr-validation-summary
         path: pr_summary.md
